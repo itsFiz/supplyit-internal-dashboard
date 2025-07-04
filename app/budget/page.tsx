@@ -1,5 +1,5 @@
-import Layout from '../components/Layout';
-import BudgetTable from '../components/BudgetTable';
+import Layout from '../../components/Layout';
+import BudgetTable from '../../components/BudgetTable';
 
 export default function BudgetPage() {
   return (

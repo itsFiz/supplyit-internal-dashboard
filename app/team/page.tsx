@@ -1,5 +1,5 @@
-import Layout from '../components/Layout';
-import TeamOverview from '../components/TeamOverview';
+import Layout from '../../components/Layout';
+import TeamOverview from '../../components/TeamOverview';
 
 export default function TeamPage() {
   return (

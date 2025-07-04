@@ -1,5 +1,5 @@
-import Layout from '../components/Layout';
-import MilestoneTracker from '../components/MilestoneTracker';
+import Layout from '../../components/Layout';
+import MilestoneTracker from '../../components/MilestoneTracker';
 
 export default function MilestonesPage() {
   return (
