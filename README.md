@@ -1,127 +1,156 @@
-# SupplyIT Internal Dashboard
+# SupplyIT Internal Management Dashboard
 
-A centralized internal tool for executive oversight of the SupplyIT project's progress, capital usage, and roadmap.
+A comprehensive executive oversight dashboard for SupplyIT B2B logistics SaaS, featuring role-based access control (RBAC), real-time KPIs, budget tracking, milestone management, and team overview.
 
 ## Features
 
-- 📊 **KPI Dashboard** - Monitor key performance indicators
-- 💰 **Budget Tracking** - Track capital usage and burn rate
-- 🎯 **Milestone Management** - Visualize project progress
-- 👥 **Team Overview** - Manage hiring plans and key roles
-- 📈 **Financial Forecasting** - Project GMV growth and cost structures
+### 🔐 Role-Based Access Control (RBAC)
+- **12 distinct user roles** with granular permissions
+- **Module-based access control** for all dashboard features
+- **Secure authentication** with NextAuth.js
+- **Route protection** with middleware
+
+### 📊 Dashboard Modules
+- **KPI Dashboard** - Real-time metrics and performance indicators
+- **Budget Management** - Capital usage tracking and financial oversight
+- **Milestone Tracker** - MVP progress and project timeline
+- **Team Overview** - Headcount planning and team management
+- **Analytics** - Advanced reporting and data visualization
+- **Roadmap** - Strategic planning and timeline view
+
+### 🎨 Modern UI/UX
+- **Responsive design** for all devices
+- **Beautiful gradients** and animations
+- **Dark/light mode** support
+- **Interactive charts** with Recharts
+- **Modern components** with Tailwind CSS
 
 ## Tech Stack
 
-- **Frontend**: Next.js 15, React 19, TypeScript
+- **Framework**: Next.js 15 (App Router)
+- **Database**: PostgreSQL with Prisma ORM
+- **Authentication**: NextAuth.js
 - **Styling**: Tailwind CSS
-- **Database**: NeonDB (PostgreSQL) with Prisma ORM
 - **Charts**: Recharts
+- **Icons**: Lucide React
 - **State Management**: Zustand
-- **Deployment**: Vercel
 
-## Getting Started
+## Quick Start
 
-### Prerequisites
+### 1. Clone and Install
 
-- Node.js 18+ 
-- npm or yarn
-- NeonDB account
-- Vercel account
+```bash
+git clone <repository-url>
+cd supplyit-dashboard
+npm install
+```
 
-### Local Development
+### 2. Environment Setup
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/itsFiz/supplyit-internal-dashboard.git
-   cd supplyit-internal-dashboard
-   ```
+Create a `.env.local` file in the root directory:
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+```env
+# Database (NeonDB recommended)
+DATABASE_URL="postgresql://username:password@localhost:5432/supplyit_dashboard"
 
-3. **Set up environment variables**
-   ```bash
-   cp .env.local.example .env.local
-   ```
-   
-   Update `.env.local` with your NeonDB connection string:
-   ```
-   DATABASE_URL="postgresql://username:password@host:port/database"
-   ```
+# NextAuth
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="your-secret-key-here"
 
-4. **Set up the database**
-   - Create a new project in NeonDB
-   - Copy the connection string to your `.env.local`
-   - Generate Prisma client: `npm run db:generate`
-   - Push schema to database: `npm run db:push`
-   - Seed initial data: `npm run db:seed`
+# For production, generate a strong secret:
+# NEXTAUTH_SECRET=$(openssl rand -base64 32)
+```
 
-5. **Run the development server**
-   ```bash
-   npm run dev
-   ```
+### 3. Database Setup
 
-6. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+```bash
+# Generate Prisma client
+npm run db:generate
+
+# Push schema to database
+npm run db:push
+
+# Seed database with initial data
+npm run db:seed
+```
+
+### 4. Start Development Server
+
+```bash
+npm run dev
+```
+
+Visit [http://localhost:3000](http://localhost:3000) to see the dashboard.
+
+## User Roles & Permissions
+
+### Admin Roles
+- **FOUNDER** - Full access to all modules
+- **SUPER_ADMIN** - Full access to all modules
+
+### Management Roles
+- **FINANCE_CONTROLLER** - Budget, financial projections, reports
+- **PRODUCT_OWNER** - Milestones, roadmap, KPI updates
+- **OPS_MANAGER** - Team planning, delivery metrics
+- **TECH_LEAD** - Development progress, infrastructure status
+- **STRATEGY_LEAD** - Strategic planning, investor relations
+- **SALES_LEAD** - Sales metrics, team planning
+
+### External Roles
+- **INVESTOR** - Read-only access to financial and progress data
+- **PILOT_CLIENT** - Limited access to KPI dashboard
+- **ADVISOR** - Read-only access to most modules
+- **TEAM** - Basic read access to team-relevant data
+
+## Demo Credentials
+
+After seeding the database, you can use these credentials:
+
+- **Admin**: `admin@supplyit.io` / `admin123`
+- **Finance**: `finance@supplyit.io` / `admin123`
+- **Product**: `product@supplyit.io` / `admin123`
+- **Operations**: `ops@supplyit.io` / `admin123`
+- **Tech**: `tech@supplyit.io` / `admin123`
+- **Investor**: `investor@supplyit.io` / `admin123`
+
+## Database Schema
+
+The application uses a comprehensive Prisma schema with:
+
+- **Users** - Authentication and role management
+- **Budget** - Financial tracking and allocation
+- **Milestones** - Project progress and timelines
+- **Team Members** - Headcount and equity management
+- **KPIs** - Performance metrics and targets
 
 ## Deployment
 
-### Vercel Setup
+### Vercel (Recommended)
 
-1. **Connect to Vercel**
-   - Go to [vercel.com](https://vercel.com)
-   - Import your GitHub repository
-   - Add environment variables in Vercel dashboard
+1. Connect your GitHub repository to Vercel
+2. Set environment variables in Vercel dashboard
+3. Deploy automatically on push to main branch
 
-2. **Environment Variables in Vercel**
-   - `DATABASE_URL`: Your NeonDB connection string
-   - `NEXTAUTH_SECRET`: A secure random string
-   - `NEXTAUTH_URL`: Your Vercel deployment URL
+### Environment Variables for Production
 
-3. **Deploy**
-   - Vercel will automatically deploy on push to main branch
-   - Set up custom domain if needed
-
-### NeonDB Setup
-
-1. **Create Database**
-   - Sign up at [neon.tech](https://neon.tech)
-   - Create a new project
-   - Copy the connection string
-
-2. **Set up Prisma**
-   ```bash
-   npm run db:generate
-   npm run db:push
-   npm run db:seed
-   ```
-
-3. **Optional: View data with Prisma Studio**
-   ```bash
-   npm run db:studio
-   ```
-
-## Project Structure
-
-```
-supplyit-dashboard/
-├── app/                 # Next.js app directory
-├── components/          # React components
-├── pages/              # Page components
-├── lib/                # Database and utilities
-├── data/               # Data files
-└── public/             # Static assets
+```env
+DATABASE_URL="your-production-database-url"
+NEXTAUTH_URL="https://your-domain.com"
+NEXTAUTH_SECRET="your-production-secret"
 ```
 
 ## Contributing
 
-1. Create a feature branch
-2. Make your changes
-3. Test locally
-4. Submit a pull request
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
 ## License
 
-Internal use only - NexzGen Strategic Ventures
+This project is proprietary to SupplyIT. All rights reserved.
+
+## Support
+
+For support, contact the development team or create an issue in the repository.

@@ -7,28 +7,30 @@ const team = [
 
 export default function TeamOverview() {
   return (
-    <div className="bg-zinc-900/80 rounded-xl p-6 shadow border border-zinc-800 w-full">
+    <div className="bg-zinc-900/80 rounded-xl p-4 sm:p-6 shadow border border-zinc-800">
       <h2 className="text-lg font-semibold mb-4">Team Overview</h2>
-      <table className="w-full text-left">
-        <thead>
-          <tr className="text-zinc-400 text-xs uppercase">
-            <th className="py-2">Role</th>
-            <th className="py-2">Involvement</th>
-            <th className="py-2">Monthly Cost (RM)</th>
-            <th className="py-2">Notes</th>
-          </tr>
-        </thead>
-        <tbody>
-          {team.map((member) => (
-            <tr key={member.role} className="border-t border-zinc-800">
-              <td className="py-2 font-medium">{member.role}</td>
-              <td className="py-2">{member.involvement}</td>
-              <td className="py-2">RM {member.monthlyCost.toLocaleString()}</td>
-              <td className="py-2 text-zinc-400">{member.notes}</td>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left min-w-full">
+          <thead>
+            <tr className="text-zinc-400 text-xs uppercase">
+              <th className="py-2 pr-4">Role</th>
+              <th className="py-2 pr-4">Involvement</th>
+              <th className="py-2 pr-4">Monthly Cost (RM)</th>
+              <th className="py-2 hidden sm:table-cell">Notes</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {team.map((member) => (
+              <tr key={member.role} className="border-t border-zinc-800">
+                <td className="py-2 pr-4 font-medium text-sm">{member.role}</td>
+                <td className="py-2 pr-4 text-sm">{member.involvement}</td>
+                <td className="py-2 pr-4 text-sm">RM {member.monthlyCost.toLocaleString()}</td>
+                <td className="py-2 text-zinc-400 text-sm hidden sm:table-cell">{member.notes}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 } 
