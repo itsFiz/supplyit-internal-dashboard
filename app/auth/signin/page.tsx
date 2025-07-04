@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { signIn, getSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 
@@ -19,7 +19,7 @@ export default function SignIn() {
     setError('');
 
     try {
-      const result = await signIn('credentials', {
+      await signIn('credentials', {
         email,
         password,
         redirect: true,
