@@ -30,7 +30,7 @@ export default function SignIn() {
       } else {
         const session = await getSession();
         if (session) {
-          router.push('/');
+          router.push('/dashboard');
         }
       }
     } catch {
