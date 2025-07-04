@@ -22,18 +22,11 @@ export default function SignIn() {
       const result = await signIn('credentials', {
         email,
         password,
-        redirect: false,
+        redirect: true,
+        callbackUrl: '/dashboard'
       });
-
-      if (result?.error) {
-        setError('Invalid email or password');
-      } else {
-        const session = await getSession();
-        if (session) {
-          router.push('/dashboard');
-        }
-      }
-    } catch {
+    } catch (error) {
+      console.error('Sign-in error:', error);
       setError('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);
