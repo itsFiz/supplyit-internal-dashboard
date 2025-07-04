@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  role      Role     @default(TEAM)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model BudgetCategory {
+  id           Int      @id @default(autoincrement())
+  category     String
+  estimatedCost Decimal  @db.Decimal(10, 2)
+  actualCost   Decimal  @default(0) @db.Decimal(10, 2)
+  notes        String?
+  createdAt    DateTime @default(now())
+
+  @@map("budget_categories")
+}
+
+model Milestone {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  targetDate  DateTime  @db.Date
+  status      MilestoneStatus @default(PENDING)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@map("milestones")
+}
+
+model TeamMember {
+  id           Int      @id @default(autoincrement())
+  role         String
+  name         String?
+  involvement  String
+  monthlyCost  Decimal  @default(0) @db.Decimal(10, 2)
+  notes        String?
+  createdAt    DateTime @default(now())
+
+  @@map("team_members")
+}
+
+model KPI {
+  id         Int      @id @default(autoincrement())
+  name       String
+  value      Decimal  @db.Decimal(10, 2)
+  targetValue Decimal? @db.Decimal(10, 2)
+  unit       String?
+  date       DateTime @default(now()) @db.Date
+  createdAt  DateTime @default(now())
+
+  @@map("kpis")
+}
+
+enum Role {
+  FOUNDER
+  SUPER_ADMIN
+  FINANCE_CONTROLLER
+  PRODUCT_OWNER
+  OPS_MANAGER
+  TECH_LEAD
+  STRATEGY_LEAD
+  SALES_LEAD
+  INVESTOR
+  PILOT_CLIENT
+  ADVISOR
+  TEAM
+}
+
+enum MilestoneStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  BLOCKED
+}
