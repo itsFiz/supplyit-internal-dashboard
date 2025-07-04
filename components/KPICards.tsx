@@ -1,4 +1,5 @@
 import { TrendingUp, TrendingDown, DollarSign, Target, Calendar } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function KPICards() {
   // Financial data calculations
@@ -53,45 +54,113 @@ export default function KPICards() {
     },
   ];
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        duration: 0.5
+      }
+    }
+  };
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <motion.div 
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       {kpis.map((kpi, index) => {
         const Icon = kpi.icon;
         return (
-          <div 
+          <motion.div 
             key={kpi.label} 
             className={`group relative overflow-hidden rounded-2xl p-6 bg-gradient-to-br ${kpi.bgColor} border ${kpi.borderColor} card-hover`}
-            style={{ animationDelay: `${index * 100}ms` }}
+            variants={cardVariants}
+            whileHover={{ 
+              scale: 1.02,
+              transition: { duration: 0.2 }
+            }}
+            whileTap={{ scale: 0.98 }}
           >
             {/* Background gradient overlay */}
-            <div className={`absolute inset-0 bg-gradient-to-br ${kpi.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
+            <motion.div 
+              className={`absolute inset-0 bg-gradient-to-br ${kpi.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}
+              whileHover={{ opacity: 0.1 }}
+            ></motion.div>
             
             {/* Icon */}
-            <div className={`relative z-10 w-12 h-12 rounded-xl bg-gradient-to-br ${kpi.color} flex items-center justify-center mb-4 shadow-lg`}>
+            <motion.div 
+              className={`relative z-10 w-12 h-12 rounded-xl bg-gradient-to-br ${kpi.color} flex items-center justify-center mb-4 shadow-lg`}
+              whileHover={{ 
+                rotate: 5, 
+                scale: 1.1,
+                transition: { duration: 0.2 }
+              }}
+            >
               <Icon className="w-6 h-6 text-white" />
-            </div>
+            </motion.div>
             
             {/* Content */}
             <div className="relative z-10">
-              <p className="text-slate-300 text-sm font-medium mb-1">{kpi.label}</p>
-              <p className="text-2xl font-bold text-white mb-2">{kpi.value}</p>
-              <div className="flex items-center gap-2">
-                {kpi.positive ? (
-                  <TrendingUp className="w-4 h-4 text-green-400" />
-                ) : (
-                  <TrendingDown className="w-4 h-4 text-red-400" />
-                )}
+              <motion.p 
+                className="text-slate-300 text-sm font-medium mb-1"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: index * 0.1 + 0.2 }}
+              >
+                {kpi.label}
+              </motion.p>
+              <motion.p 
+                className="text-2xl font-bold text-white mb-2"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 + 0.3 }}
+              >
+                {kpi.value}
+              </motion.p>
+              <motion.div 
+                className="flex items-center gap-2"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: index * 0.1 + 0.4 }}
+              >
+                <motion.div
+                  whileHover={{ scale: 1.2 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {kpi.positive ? (
+                    <TrendingUp className="w-4 h-4 text-green-400" />
+                  ) : (
+                    <TrendingDown className="w-4 h-4 text-red-400" />
+                  )}
+                </motion.div>
                 <span className={`text-sm font-medium ${kpi.positive ? 'text-green-400' : 'text-red-400'}`}>
                   {kpi.change}
                 </span>
-              </div>
+              </motion.div>
             </div>
             
             {/* Animated border */}
-            <div className={`absolute inset-0 rounded-2xl border-2 ${kpi.borderColor} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
-          </div>
+            <motion.div 
+              className={`absolute inset-0 rounded-2xl border-2 ${kpi.borderColor} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+              whileHover={{ opacity: 1 }}
+            ></motion.div>
+          </motion.div>
         );
       })}
-    </div>
+    </motion.div>
   );
 } 

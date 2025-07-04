@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { CheckCircle, Clock, Target, Calendar, Plus } from 'lucide-react';
+import { CheckCircle, Clock, Target, Calendar } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface Milestone {
   id: number;
@@ -119,108 +120,176 @@ export default function MilestoneTracker() {
   const inProgressCount = milestones.filter(m => m.status === 'in-progress').length;
   const pendingCount = milestones.filter(m => m.status === 'pending').length;
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        duration: 0.5
+      }
+    }
+  };
+
+  const totalProgress = Math.round((completedCount / milestones.length) * 100);
+
   return (
-    <div className="glass-effect rounded-2xl p-6 border border-white/10">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div>
-          <h3 className="text-lg font-semibold text-white">Milestone Tracker</h3>
-          <p className="text-slate-400 text-sm">MVP progress and project timeline</p>
+    <div className="space-y-8">
+      {/* Progress Overview */}
+      <motion.div 
+        className="grid grid-cols-1 md:grid-cols-4 gap-6"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {[
+          { label: 'Total Milestones', value: milestones.length.toString(), icon: Target, color: 'from-purple-500 to-pink-500' },
+          { label: 'Completed', value: completedCount.toString(), icon: CheckCircle, color: 'from-green-500 to-emerald-500' },
+          { label: 'In Progress', value: inProgressCount.toString(), icon: Clock, color: 'from-blue-500 to-cyan-500' },
+          { label: 'Pending', value: pendingCount.toString(), icon: Target, color: 'from-orange-500 to-red-500' }
+        ].map((stat) => {
+          const Icon = stat.icon;
+          return (
+            <motion.div
+              key={stat.label}
+              variants={itemVariants}
+              whileHover={{ scale: 1.02 }}
+              className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6"
+            >
+              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center mb-4`}>
+                <Icon className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-1">{stat.value}</h3>
+              <p className="text-slate-400 text-sm">{stat.label}</p>
+            </motion.div>
+          );
+        })}
+      </motion.div>
+
+      {/* Overall Progress */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+        className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6"
+      >
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-xl font-bold text-white">Overall Progress</h3>
+          <span className="text-2xl font-bold text-blue-400">{totalProgress}%</span>
         </div>
-        <div className="flex gap-3">
+        <motion.div 
+          className="w-full bg-white/10 rounded-full h-3 overflow-hidden"
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 1, delay: 0.5 }}
+        >
+          <motion.div 
+            className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+            initial={{ width: 0 }}
+            animate={{ width: `${totalProgress}%` }}
+            transition={{ duration: 1, delay: 0.7 }}
+          />
+        </motion.div>
+      </motion.div>
+
+      {/* Milestones List */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.4 }}
+      >
+        <motion.h2 
+          className="text-2xl font-bold text-white mb-6"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+        >
+          Milestones
+        </motion.h2>
+        
+        {/* Status Filter */}
+        <div className="mb-6">
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-3 py-2 bg-white/10 border border-white/20 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="all">All Status</option>
             <option value="completed">Completed</option>
             <option value="in-progress">In Progress</option>
             <option value="pending">Pending</option>
           </select>
-          <button className="px-4 py-2 bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30 rounded-xl text-purple-300 hover:from-purple-500/30 hover:to-blue-500/30 transition-all duration-300">
-            <Plus className="h-4 w-4" />
-          </button>
         </div>
-      </div>
-
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-white/5 border border-white/10 rounded-xl p-4">
-          <div className="flex items-center gap-3 mb-2">
-            <CheckCircle className="h-5 w-5 text-green-400" />
-            <span className="text-slate-400 text-sm">Completed</span>
-          </div>
-          <p className="text-2xl font-bold text-white">{completedCount}</p>
-        </div>
-        <div className="bg-white/5 border border-white/10 rounded-xl p-4">
-          <div className="flex items-center gap-3 mb-2">
-            <Clock className="h-5 w-5 text-blue-400" />
-            <span className="text-slate-400 text-sm">In Progress</span>
-          </div>
-          <p className="text-2xl font-bold text-white">{inProgressCount}</p>
-        </div>
-        <div className="bg-white/5 border border-white/10 rounded-xl p-4">
-          <div className="flex items-center gap-3 mb-2">
-            <Target className="h-5 w-5 text-gray-400" />
-            <span className="text-slate-400 text-sm">Pending</span>
-          </div>
-          <p className="text-2xl font-bold text-white">{pendingCount}</p>
-        </div>
-      </div>
-
-      {/* Milestones List */}
-      <div className="space-y-4">
-        {filteredMilestones.map((milestone) => (
-          <div key={milestone.id} className={`border-2 rounded-xl p-4 ${getStatusColor(milestone.status)}`}>
-            <div className="flex items-start gap-4">
-              {getStatusIcon(milestone.status)}
-              <div className="flex-1">
-                <div className="flex items-start justify-between gap-4 mb-2">
-                  <div>
-                    <h4 className="font-semibold text-gray-900">{milestone.title}</h4>
-                    <p className="text-gray-600 text-sm mt-1">{milestone.description}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(milestone.priority)}`}>
-                      {milestone.priority.toUpperCase()}
-                    </span>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      milestone.status === 'completed' ? 'bg-green-100 text-green-800' :
-                      milestone.status === 'in-progress' ? 'bg-blue-100 text-blue-800' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
-                      {milestone.status.replace('-', ' ').toUpperCase()}
-                    </span>
-                  </div>
+        
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {filteredMilestones.map((milestone, index) => (
+            <motion.div
+              key={milestone.id}
+              variants={itemVariants}
+              whileHover={{ scale: 1.02 }}
+              className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <motion.div 
+                  className={`w-12 h-12 rounded-xl bg-gradient-to-br ${getStatusColor(milestone.status)} flex items-center justify-center`}
+                  whileHover={{ rotate: 5, scale: 1.1 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {getStatusIcon(milestone.status)}
+                </motion.div>
+                <span className={`text-xs font-medium px-2 py-1 rounded-full ${getPriorityColor(milestone.priority)} bg-white/10`}>
+                  {milestone.priority}
+                </span>
+              </div>
+              
+              <h3 className="text-xl font-bold text-white mb-2">{milestone.title}</h3>
+              <p className="text-slate-400 text-sm mb-4">{milestone.description}</p>
+              
+              <div className="space-y-3 mb-4">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-slate-400">Progress</span>
+                  <span className="text-white font-medium">{milestone.progress}%</span>
                 </div>
-                
-                <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
-                  <div className="flex items-center gap-1">
-                    <Calendar className="h-4 w-4" />
-                    Due: {formatDate(milestone.dueDate)}
-                  </div>
-                </div>
-
-                {/* Progress Bar */}
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div 
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      milestone.status === 'completed' ? 'bg-green-500' :
-                      milestone.status === 'in-progress' ? 'bg-blue-500' :
-                      'bg-gray-300'
-                    }`}
-                    style={{ width: `${milestone.progress}%` }}
-                  ></div>
-                </div>
-                <div className="flex justify-between text-xs text-gray-500 mt-1">
-                  <span>Progress</span>
-                  <span>{milestone.progress}%</span>
+                <motion.div 
+                  className="w-full bg-white/10 rounded-full h-2 overflow-hidden"
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  <motion.div 
+                    className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${milestone.progress}%` }}
+                    transition={{ duration: 0.8, delay: index * 0.1 + 0.3 }}
+                  />
+                </motion.div>
+              </div>
+              
+              <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center gap-2 text-slate-400">
+                  <Calendar className="w-4 h-4" />
+                  <span>{formatDate(milestone.dueDate)}</span>
                 </div>
               </div>
-            </div>
-          </div>
-        ))}
-      </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </motion.div>
     </div>
   );
 } 

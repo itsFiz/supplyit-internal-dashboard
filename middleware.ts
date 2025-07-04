@@ -7,16 +7,13 @@ export default withAuth(
     const token = req.nextauth.token;
     const pathname = req.nextUrl.pathname;
 
-    // If no token, redirect to landing page
-    if (!token) {
-      return NextResponse.redirect(new URL("/landing", req.url));
-    }
-
     // Check if user has access to the route
-    const userRole = token.role as Role;
-    if (!canAccessRoute(userRole, pathname)) {
-      // Redirect to main page if no access
-      return NextResponse.redirect(new URL("/", req.url));
+    if (token) {
+      const userRole = token.role as Role;
+      if (!canAccessRoute(userRole, pathname)) {
+        // Redirect to main page if no access
+        return NextResponse.redirect(new URL("/dashboard", req.url));
+      }
     }
 
     return NextResponse.next();
@@ -30,9 +27,18 @@ export default withAuth(
 
 export const config = {
   matcher: [
-    "/",
+    "/dashboard",
+    "/strategy",
+    "/legal",
+    "/fundraising",
+    "/product",
+    "/operations",
+    "/brand",
+    "/documents",
     "/team",
     "/milestones",
+    "/financial-metrics",
+    "/financial-projections",
     "/budget",
     "/analytics",
     "/roadmap",

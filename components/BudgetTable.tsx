@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
+import { TrendingUp, TrendingDown, Plus, Download, Filter, Search } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface BudgetItem {
   id: number;
@@ -90,6 +91,7 @@ const budgetData: BudgetItem[] = [
 export default function BudgetTable() {
   const [selectedPeriod, setSelectedPeriod] = useState('Q1 2024');
   const [selectedType, setSelectedType] = useState<'all' | 'capex' | 'opex'>('all');
+  const [searchTerm, setSearchTerm] = useState('');
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -128,7 +130,8 @@ export default function BudgetTable() {
 
   const filteredData = budgetData.filter(item => 
     item.period === selectedPeriod && 
-    (selectedType === 'all' || item.type === selectedType)
+    (selectedType === 'all' || item.type === selectedType) &&
+    item.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalAllocated = filteredData.reduce((sum, item) => sum + item.allocated, 0);
@@ -141,133 +144,196 @@ export default function BudgetTable() {
   const capexTotal = capexData.reduce((sum, item) => sum + item.allocated, 0);
   const opexTotal = opexData.reduce((sum, item) => sum + item.allocated, 0);
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.05
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        duration: 0.5
+      }
+    }
+  };
+
   return (
-    <div className="glass-effect rounded-2xl p-6 border border-white/10">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div>
-          <h3 className="text-lg font-semibold text-white">Budget Overview</h3>
-          <p className="text-slate-400 text-sm">Capital allocation and spending tracking</p>
+    <div className="space-y-6">
+      {/* Header Actions */}
+      <motion.div 
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+      >
+        <div className="flex items-center gap-4">
+          <motion.button
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Plus className="w-4 h-4" />
+            Add Item
+          </motion.button>
+          <motion.button
+            className="flex items-center gap-2 px-4 py-2 bg-white/10 border border-white/20 text-white rounded-xl hover:bg-white/20 transition-all duration-300"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Download className="w-4 h-4" />
+            Export
+          </motion.button>
         </div>
-        <div className="flex gap-3">
+        
+        <div className="flex items-center gap-2">
+          {/* Period Filter */}
           <select
             value={selectedPeriod}
             onChange={(e) => setSelectedPeriod(e.target.value)}
-            className="px-3 py-2 bg-white/10 border border-white/20 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
           >
             <option value="Q1 2024">Q1 2024</option>
             <option value="Q2 2024">Q2 2024</option>
             <option value="Q3 2024">Q3 2024</option>
             <option value="Q4 2024">Q4 2024</option>
           </select>
+
+          {/* Type Filter */}
           <select
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value as 'all' | 'capex' | 'opex')}
-            className="px-3 py-2 bg-white/10 border border-white/20 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
           >
-            <option value="all">All Expenses</option>
-            <option value="capex">Capital (CapEx)</option>
-            <option value="opex">Operating (OpEx)</option>
+            <option value="all">All Types</option>
+            <option value="capex">CAPEX</option>
+            <option value="opex">OPEX</option>
           </select>
-          <button className="px-4 py-2 bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30 rounded-xl text-purple-300 hover:from-purple-500/30 hover:to-blue-500/30 transition-all duration-300">
-            Export
-          </button>
+
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search budget items..."
+              className="pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+            />
+          </div>
+          <motion.button
+            className="p-2 bg-white/10 border border-white/20 text-white rounded-xl hover:bg-white/20 transition-all duration-300"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Filter className="w-4 h-4" />
+          </motion.button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-        <div className="bg-white/5 border border-white/10 rounded-xl p-4">
-          <div className="flex items-center gap-3 mb-2">
-            <DollarSign className="h-5 w-5 text-green-400" />
-            <span className="text-slate-400 text-sm">Total Allocated</span>
-          </div>
-          <p className="text-2xl font-bold text-white">{formatCurrency(totalAllocated)}</p>
-        </div>
-        <div className="bg-white/5 border border-white/10 rounded-xl p-4">
-          <div className="flex items-center gap-3 mb-2">
-            <DollarSign className="h-5 w-5 text-red-400" />
-            <span className="text-slate-400 text-sm">Total Spent</span>
-          </div>
-          <p className="text-2xl font-bold text-white">{formatCurrency(totalSpent)}</p>
-        </div>
-        <div className="bg-white/5 border border-white/10 rounded-xl p-4">
-          <div className="flex items-center gap-3 mb-2">
-            <DollarSign className="h-5 w-5 text-blue-400" />
-            <span className="text-slate-400 text-sm">Remaining</span>
-          </div>
-          <p className="text-2xl font-bold text-white">{formatCurrency(totalRemaining)}</p>
-        </div>
-        <div className="bg-white/5 border border-white/10 rounded-xl p-4">
-          <div className="flex items-center gap-3 mb-2">
-            <DollarSign className="h-5 w-5 text-purple-400" />
-            <span className="text-slate-400 text-sm">CapEx</span>
-          </div>
-          <p className="text-2xl font-bold text-white">{formatCurrency(capexTotal)}</p>
-        </div>
-        <div className="bg-white/5 border border-white/10 rounded-xl p-4">
-          <div className="flex items-center gap-3 mb-2">
-            <DollarSign className="h-5 w-5 text-orange-400" />
-            <span className="text-slate-400 text-sm">OpEx</span>
-          </div>
-          <p className="text-2xl font-bold text-white">{formatCurrency(opexTotal)}</p>
-        </div>
-      </div>
+      <motion.div 
+        className="grid grid-cols-1 md:grid-cols-5 gap-6"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {[
+          { label: 'Total Allocated', value: formatCurrency(totalAllocated), color: 'from-blue-500 to-cyan-500' },
+          { label: 'Total Spent', value: formatCurrency(totalSpent), color: 'from-red-500 to-pink-500' },
+          { label: 'Remaining', value: formatCurrency(totalRemaining), color: 'from-green-500 to-emerald-500' },
+          { label: 'CAPEX Total', value: formatCurrency(capexTotal), color: 'from-purple-500 to-violet-500' },
+          { label: 'OPEX Total', value: formatCurrency(opexTotal), color: 'from-orange-500 to-amber-500' }
+        ].map((summary) => (
+          <motion.div
+            key={summary.label}
+            variants={itemVariants}
+            whileHover={{ scale: 1.02 }}
+            className={`p-6 rounded-2xl bg-gradient-to-br ${summary.color} text-white`}
+          >
+            <h3 className="text-2xl font-bold mb-1">{summary.value}</h3>
+            <p className="text-sm opacity-90">{summary.label}</p>
+          </motion.div>
+        ))}
+      </motion.div>
 
       {/* Budget Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-white/10">
-              <th className="text-left py-3 px-4 text-slate-400 font-medium">Category</th>
-              <th className="text-center py-3 px-4 text-slate-400 font-medium">Type</th>
-              <th className="text-right py-3 px-4 text-slate-400 font-medium">Allocated</th>
-              <th className="text-right py-3 px-4 text-slate-400 font-medium">Spent</th>
-              <th className="text-right py-3 px-4 text-slate-400 font-medium">Remaining</th>
-              <th className="text-right py-3 px-4 text-slate-400 font-medium">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredData.map((item) => (
-              <tr key={item.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                <td className="py-4 px-4">
-                  <div>
-                    <p className="text-white font-medium">{item.category}</p>
-                    <p className="text-slate-400 text-sm">{item.period}</p>
-                  </div>
-                </td>
-                <td className="py-4 px-4 text-center">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    item.type === 'capex' 
-                      ? 'text-purple-400 bg-purple-400/10 border border-purple-400/20' 
-                      : 'text-orange-400 bg-orange-400/10 border border-orange-400/20'
-                  }`}>
-                    {item.type.toUpperCase()}
-                  </span>
-                </td>
-                <td className="py-4 px-4 text-right">
-                  <p className="text-white font-medium">{formatCurrency(item.allocated)}</p>
-                </td>
-                <td className="py-4 px-4 text-right">
-                  <p className="text-white font-medium">{formatCurrency(item.spent)}</p>
-                </td>
-                <td className="py-4 px-4 text-right">
-                  <p className={`font-medium ${item.remaining < 0 ? 'text-red-400' : 'text-white'}`}>
-                    {formatCurrency(item.remaining)}
-                  </p>
-                </td>
-                <td className="py-4 px-4 text-right">
-                  <div className="flex items-center justify-end gap-2">
-                    {getStatusIcon(item.status)}
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(item.status)}`}>
-                      {item.status.replace('-', ' ').toUpperCase()}
+      <motion.div
+        className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+      >
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <motion.tr 
+                className="bg-white/10 border-b border-white/10"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
+                <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Category</th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Type</th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Allocated</th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Spent</th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Remaining</th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Status</th>
+              </motion.tr>
+            </thead>
+            <tbody className="divide-y divide-white/10">
+              {filteredData.map((item) => (
+                <motion.tr
+                  key={item.id}
+                  className="hover:bg-white/5 transition-colors duration-200"
+                  variants={itemVariants}
+                  initial="hidden"
+                  animate="visible"
+                  whileHover={{ scale: 1.01 }}
+                >
+                  <td className="px-6 py-4">
+                    <div className="text-sm font-medium text-white">{item.category}</div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      item.type === 'capex' 
+                        ? 'text-purple-400 bg-purple-400/10 border border-purple-400/20' 
+                        : 'text-orange-400 bg-orange-400/10 border border-orange-400/20'
+                    }`}>
+                      {item.type.toUpperCase()}
                     </span>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-white">{formatCurrency(item.allocated)}</div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-white">{formatCurrency(item.spent)}</div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className={`text-sm ${item.remaining < 0 ? 'text-red-400' : 'text-white'}`}>
+                      {formatCurrency(item.remaining)}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center justify-end gap-2">
+                      {getStatusIcon(item.status)}
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(item.status)}`}>
+                        {item.status.replace('-', ' ').toUpperCase()}
+                      </span>
+                    </div>
+                  </td>
+                </motion.tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </motion.div>
     </div>
   );
 } 

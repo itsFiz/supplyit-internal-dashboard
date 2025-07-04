@@ -1,32 +1,42 @@
 'use client';
-import { Bell, Search, Download, Filter, Calendar, User, LogOut } from 'lucide-react';
+import { Bell, Search, User, LogOut, Settings, HelpCircle } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import { signOut } from 'next-auth/react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Topbar() {
-  const [openDropdown, setOpenDropdown] = useState<'notification' | 'user' | null>(null);
-  const notifRef = useRef<HTMLDivElement>(null);
-  const userRef = useRef<HTMLDivElement>(null);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [notifications] = useState([
+    { id: 1, message: 'New milestone completed', time: '2 hours ago', read: false },
+    { id: 2, message: 'Budget alert: 80% of monthly budget used', time: '4 hours ago', read: false },
+    { id: 3, message: 'Team member joined: Sarah Chen', time: '1 day ago', read: true },
+  ]);
 
-  // Close dropdowns when clicking outside
+  const userRef = useRef<HTMLDivElement>(null);
+  const notificationRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    const handleClick = (event: MouseEvent) => {
-      if (
-        notifRef.current && !notifRef.current.contains(event.target as Node) &&
-        userRef.current && !userRef.current.contains(event.target as Node)
-      ) {
+    function handleClickOutside(event: MouseEvent) {
+      if (userRef.current && !userRef.current.contains(event.target as Node)) {
         setOpenDropdown(null);
       }
+      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+        setOpenDropdown(null);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
     };
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
   }, []);
 
-  const handleSignOut = () => {
-    // Add sign out logic here
-    setOpenDropdown(null);
-    console.log('Signing out...');
+  const handleSignOut = async () => {
+    await signOut({ callbackUrl: '/' });
   };
+
+  const unreadCount = notifications.filter(n => !n.read).length;
 
   // Format today's date
   const formatTodayDate = () => {
@@ -37,88 +47,192 @@ export default function Topbar() {
   };
 
   return (
-    <header className="flex items-center justify-between p-4 mb-6 glass-effect rounded-2xl border border-white/10">
-      {/* Left section */}
-      <div className="flex items-center gap-4 flex-1">
-        <div className="relative max-w-md">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <input
-            type="text"
-            placeholder="Search projects, reports, or team members..."
-            className="w-full pl-10 pr-4 py-2 text-sm rounded-xl bg-white/10 text-white placeholder-slate-400 border border-white/20 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300"
-          />
-        </div>
-        <button className="p-2 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 transition-all duration-300">
-          <Filter className="w-4 h-4 text-slate-300" />
-        </button>
-      </div>
+    <motion.header 
+      className="bg-slate-900/50 backdrop-blur-xl border-b border-white/10 px-4 sm:px-6 lg:px-8 py-4 z-50"
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 0.1 }}
+    >
+      <div className="flex items-center justify-between">
+        {/* Search Bar */}
+        <motion.div 
+          className="flex-1 max-w-lg"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+            <input
+              type="text"
+              placeholder="Search dashboard..."
+              className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+            />
+          </div>
+        </motion.div>
 
-      {/* Right section */}
-      <div className="flex items-center gap-3">
-        {/* Date */}
-        <div className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl bg-white/10 border border-white/20">
-          <Calendar className="w-4 h-4 text-slate-300" />
-          <span className="text-sm text-slate-300">{formatTodayDate()}</span>
-        </div>
+        {/* Date Display */}
+        <motion.div 
+          className="hidden md:flex items-center px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-white"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.25 }}
+        >
+          <span className="text-sm font-medium">{formatTodayDate()}</span>
+        </motion.div>
 
-        {/* Export button */}
-        <button className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30 hover:from-purple-500/30 hover:to-blue-500/30 transition-all duration-300">
-          <Download className="w-4 h-4 text-purple-300" />
-          <span className="text-sm font-medium text-purple-300 hidden sm:inline">Export</span>
-        </button>
-
-        {/* Notifications */}
-        <div className="relative" ref={notifRef}>
-          <button
-            className="relative p-2 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 transition-all duration-300"
-            onClick={() => setOpenDropdown(openDropdown === 'notification' ? null : 'notification')}
+        {/* Right side actions */}
+        <div className="flex items-center gap-4">
+          {/* Notifications */}
+          <motion.div 
+            className="relative" 
+            ref={notificationRef}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <Bell className="w-5 h-5 text-slate-300" />
-            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-slate-900 animate-pulse"></span>
-          </button>
-          {openDropdown === 'notification' && (
-            <div className="absolute right-0 mt-2 w-72 bg-slate-900/95 border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden">
-              <div className="p-4 border-b border-white/10 font-semibold text-slate-200">Notifications</div>
-              <ul className="divide-y divide-white/10">
-                <li className="px-4 py-3 hover:bg-white/5 cursor-pointer text-slate-300">New delivery assigned to you</li>
-                <li className="px-4 py-3 hover:bg-white/5 cursor-pointer text-slate-300">SME &quot;ABC Retail&quot; joined the platform</li>
-                <li className="px-4 py-3 hover:bg-white/5 cursor-pointer text-slate-300">System update: Analytics module improved</li>
-              </ul>
-              <div className="p-2 text-center text-xs text-purple-400 hover:underline cursor-pointer">View all notifications</div>
-            </div>
-          )}
-        </div>
+            <motion.button
+              className="relative p-2 text-slate-300 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-300"
+              onClick={() => setOpenDropdown(openDropdown === 'notifications' ? null : 'notifications')}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Bell className="w-5 h-5" />
+              {unreadCount > 0 && (
+                <motion.span 
+                  className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                >
+                  {unreadCount}
+                </motion.span>
+              )}
+            </motion.button>
 
-        {/* User avatar */}
-        <div className="relative" ref={userRef}>
-          <button
-            className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-semibold cursor-pointer hover:scale-105 transition-transform duration-300 border-2 border-white/10"
-            onClick={() => setOpenDropdown(openDropdown === 'user' ? null : 'user')}
+            <AnimatePresence>
+              {openDropdown === 'notifications' && (
+                <motion.div 
+                  className="absolute right-0 mt-2 w-80 bg-slate-900/95 border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden"
+                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <div className="p-4 border-b border-white/10">
+                    <h3 className="text-white font-semibold">Notifications</h3>
+                  </div>
+                  <div className="max-h-64 overflow-y-auto">
+                    {notifications.map((notification, index) => (
+                      <motion.div
+                        key={notification.id}
+                        className={`p-4 border-b border-white/5 hover:bg-white/5 transition-colors duration-200 ${!notification.read ? 'bg-blue-500/10' : ''}`}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                      >
+                        <p className="text-white text-sm">{notification.message}</p>
+                        <p className="text-slate-400 text-xs mt-1">{notification.time}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          {/* User Menu */}
+          <motion.div 
+            className="relative" 
+            ref={userRef}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
           >
-            F
-          </button>
-          <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-slate-900"></div>
-          {openDropdown === 'user' && (
-            <div className="absolute right-0 mt-2 w-48 bg-slate-900/95 border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden">
-              <Link
-                href="/profile"
-                className="flex items-center gap-3 px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 transition-all duration-300"
-                onClick={() => setOpenDropdown(null)}
-              >
-                <User className="w-4 h-4" />
-                <span className="text-sm">View Profile</span>
-              </Link>
-              <button
-                onClick={handleSignOut}
-                className="w-full flex items-center gap-3 px-4 py-3 text-slate-300 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300"
-              >
-                <LogOut className="w-4 h-4" />
-                <span className="text-sm">Sign Out</span>
-              </button>
-            </div>
-          )}
+            <motion.button
+              className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-semibold cursor-pointer hover:scale-105 transition-transform duration-300 border-2 border-white/10"
+              onClick={() => setOpenDropdown(openDropdown === 'user' ? null : 'user')}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              F
+            </motion.button>
+            <motion.div 
+              className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-slate-900"
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            ></motion.div>
+            
+            <AnimatePresence>
+              {openDropdown === 'user' && (
+                <motion.div 
+                  className="absolute right-0 mt-2 w-48 bg-slate-900/95 border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden"
+                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    <Link
+                      href="/profile"
+                      className="flex items-center gap-3 px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 transition-all duration-300"
+                      onClick={() => setOpenDropdown(null)}
+                    >
+                      <User className="w-4 h-4" />
+                      <span className="text-sm">View Profile</span>
+                    </Link>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.15 }}
+                  >
+                    <Link
+                      href="/settings"
+                      className="flex items-center gap-3 px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 transition-all duration-300"
+                      onClick={() => setOpenDropdown(null)}
+                    >
+                      <Settings className="w-4 h-4" />
+                      <span className="text-sm">Settings</span>
+                    </Link>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <Link
+                      href="/help"
+                      className="flex items-center gap-3 px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 transition-all duration-300"
+                      onClick={() => setOpenDropdown(null)}
+                    >
+                      <HelpCircle className="w-4 h-4" />
+                      <span className="text-sm">Help</span>
+                    </Link>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.25 }}
+                  >
+                    <button
+                      onClick={handleSignOut}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-slate-300 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span className="text-sm">Sign Out</span>
+                    </button>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 } 
