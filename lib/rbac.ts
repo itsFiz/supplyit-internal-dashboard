@@ -241,14 +241,11 @@ export function getPermissions(userRole: Role, module: Module): Permission[] {
 export function canAccessRoute(userRole: Role, route: string): boolean {
   const routeModuleMap: Record<string, Module> = {
     '/': 'KPI_DASHBOARD',
-    '/dashboard': 'KPI_DASHBOARD',
     '/team': 'HIRING_HEADCOUNT_PLAN',
     '/milestones': 'MVP_MILESTONE_PROGRESS',
     '/budget': 'CAPITAL_USAGE_BUDGET',
     '/analytics': 'KPI_DASHBOARD',
-    '/reports': 'INVESTOR_REPORT_GENERATOR',
     '/roadmap': 'ROADMAP_TIMELINE_VIEW',
-    '/settings': 'USER_MANAGEMENT',
   };
 
   const targetModule = routeModuleMap[route];

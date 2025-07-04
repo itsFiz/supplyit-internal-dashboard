@@ -127,17 +127,62 @@ The application uses a comprehensive Prisma schema with:
 
 ### Vercel (Recommended)
 
-1. Connect your GitHub repository to Vercel
-2. Set environment variables in Vercel dashboard
-3. Deploy automatically on push to main branch
+1. **Connect Repository**
+   - Connect your GitHub repository to Vercel
+   - Vercel will automatically detect Next.js framework
+
+2. **Environment Variables**
+   Set these in your Vercel project settings:
+   ```env
+   DATABASE_URL="your-production-database-url"
+   NEXTAUTH_URL="https://your-domain.vercel.app"
+   NEXTAUTH_SECRET="your-production-secret"
+   PRISMA_GENERATE_DATAPROXY="true"
+   ```
+
+3. **Build Settings**
+   - Build Command: `npm run build` (automatically includes Prisma generate)
+   - Install Command: `npm install`
+   - Output Directory: `.next`
+
+4. **Database Setup**
+   ```bash
+   # Run migrations on production database
+   npm run db:migrate
+   
+   # Seed production data (optional)
+   npm run db:seed
+   ```
+
+5. **Deploy**
+   - Vercel will automatically deploy on push to main branch
+   - Set up custom domain if needed
 
 ### Environment Variables for Production
 
 ```env
-DATABASE_URL="your-production-database-url"
+# Database (NeonDB recommended for Vercel)
+DATABASE_URL="postgresql://username:password@host:port/database"
+
+# NextAuth
 NEXTAUTH_URL="https://your-domain.com"
 NEXTAUTH_SECRET="your-production-secret"
+
+# Prisma
+PRISMA_GENERATE_DATAPROXY="true"
 ```
+
+### Troubleshooting
+
+**Prisma Client Error on Vercel:**
+- Ensure `prisma generate` runs during build (already configured)
+- Check that `DATABASE_URL` is correctly set
+- Verify database connection and migrations
+
+**Authentication Issues:**
+- Ensure `NEXTAUTH_URL` matches your deployment URL
+- Generate a strong `NEXTAUTH_SECRET` for production
+- Check that all environment variables are set in Vercel
 
 ## Contributing
 

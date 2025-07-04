@@ -75,5 +75,11 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || (() => {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("NEXTAUTH_SECRET is required in production. Please set this environment variable.");
+    }
+    console.warn("⚠️  NEXTAUTH_SECRET not set. Using development secret. Set this for production.");
+    return "dev-secret-key-change-in-production";
+  })(),
 }; 

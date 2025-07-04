@@ -15,8 +15,8 @@ export default withAuth(
     // Check if user has access to the route
     const userRole = token.role as Role;
     if (!canAccessRoute(userRole, pathname)) {
-      // Redirect to dashboard if no access
-      return NextResponse.redirect(new URL("/dashboard", req.url));
+      // Redirect to main page if no access
+      return NextResponse.redirect(new URL("/", req.url));
     }
 
     return NextResponse.next();
@@ -30,13 +30,11 @@ export default withAuth(
 
 export const config = {
   matcher: [
-    "/dashboard/:path*",
-    "/team/:path*",
-    "/milestones/:path*",
-    "/budget/:path*",
-    "/analytics/:path*",
-    "/reports/:path*",
-    "/roadmap/:path*",
-    "/settings/:path*",
+    "/",
+    "/team",
+    "/milestones",
+    "/budget",
+    "/analytics",
+    "/roadmap",
   ],
 }; 
