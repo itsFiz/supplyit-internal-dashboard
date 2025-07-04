@@ -1,46 +1,55 @@
-import { TrendingUp, TrendingDown, DollarSign, Users, Target, Calendar } from 'lucide-react';
+import { TrendingUp, TrendingDown, DollarSign, Target, Calendar } from 'lucide-react';
 
 export default function KPICards() {
+  // Financial data calculations
+  const monthlyBurnRate = 12500; // RM
+  const cashOnHand = 225000; // RM
+  const runwayMonths = Math.floor(cashOnHand / monthlyBurnRate);
+  const runwayStatus = runwayMonths <= 6 ? 'critical' : runwayMonths <= 12 ? 'warning' : 'healthy';
+  
   const kpis = [
     { 
-      label: "Today's Spend", 
-      value: 'RM 1,200', 
-      change: '+5.2%', 
-      positive: true,
-      icon: DollarSign,
-      color: 'from-green-500 to-emerald-500',
-      bgColor: 'from-green-500/20 to-emerald-500/20',
-      borderColor: 'border-green-500/30'
+      label: "Monthly Burn Rate", 
+      value: `RM ${monthlyBurnRate.toLocaleString()}`, 
+      change: '+5.9%', 
+      positive: false,
+      icon: TrendingDown,
+      color: 'from-red-500 to-pink-500',
+      bgColor: 'from-red-500/20 to-pink-500/20',
+      borderColor: 'border-red-500/30'
     },
     { 
-      label: 'Total Budget', 
-      value: 'RM 25,000', 
-      change: '80% used', 
+      label: 'Cash Runway', 
+      value: `${runwayMonths} months`, 
+      change: runwayStatus === 'critical' ? 'Critical' : runwayStatus === 'warning' ? 'Warning' : 'Healthy', 
+      positive: runwayStatus === 'healthy',
+      icon: Calendar,
+      color: runwayStatus === 'critical' ? 'from-red-500 to-orange-500' : 
+             runwayStatus === 'warning' ? 'from-yellow-500 to-orange-500' : 'from-green-500 to-emerald-500',
+      bgColor: runwayStatus === 'critical' ? 'from-red-500/20 to-orange-500/20' : 
+               runwayStatus === 'warning' ? 'from-yellow-500/20 to-orange-500/20' : 'from-green-500/20 to-emerald-500/20',
+      borderColor: runwayStatus === 'critical' ? 'border-red-500/30' : 
+                  runwayStatus === 'warning' ? 'border-yellow-500/30' : 'border-green-500/30'
+    },
+    { 
+      label: 'Cash on Hand', 
+      value: `RM ${cashOnHand.toLocaleString()}`, 
+      change: 'Based on current burn', 
       positive: true,
-      icon: Target,
+      icon: DollarSign,
       color: 'from-blue-500 to-cyan-500',
       bgColor: 'from-blue-500/20 to-cyan-500/20',
       borderColor: 'border-blue-500/30'
     },
     { 
-      label: 'Milestones Complete', 
-      value: '1/5', 
-      change: '20%', 
+      label: 'Months to Breakeven', 
+      value: '8 months', 
+      change: '+47% growth needed', 
       positive: true,
-      icon: Calendar,
+      icon: Target,
       color: 'from-purple-500 to-pink-500',
       bgColor: 'from-purple-500/20 to-pink-500/20',
       borderColor: 'border-purple-500/30'
-    },
-    { 
-      label: 'Team Members', 
-      value: '3', 
-      change: '+1 this month', 
-      positive: true,
-      icon: Users,
-      color: 'from-orange-500 to-red-500',
-      bgColor: 'from-orange-500/20 to-red-500/20',
-      borderColor: 'border-orange-500/30'
     },
   ];
 

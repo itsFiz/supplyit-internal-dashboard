@@ -436,3 +436,453 @@ Dilution protection (if needed)
 
 ---
 
+
+# 🏗️ Operations & Pilot Preparation – SupplyIT.io
+
+---
+
+## 🎯 Objective
+
+> To establish operational readiness, pilot procedures, onboarding SOPs, and delivery workflows for launching SupplyIT.io's MVP with real SMEs in Q4 2026–Q1 2027.
+
+This phase proves product-market fit, validates the gig delivery layer, and lays the groundwork for scale post-seed.
+
+---
+
+## 📌 Pilot Objectives (2026–2027)
+
+| Goal                          | Target                             |
+|-------------------------------|-------------------------------------|
+| SME clients onboarded         | 3 confirmed pilot SMEs (retail/logistics) |
+| Deliveries completed          | 500 deliveries logged              |
+| Driver partners recruited     | 200 registered (active pool: 50)   |
+| GMV milestone                 | RM 500,000 by Q2 2027              |
+| Feedback sessions             | At least 2 rounds per SME          |
+
+---
+
+## 🧩 Key Ops Components
+
+### 1. 📦 **SME Onboarding SOP (Owner: Arif & Muhaimin)**
+- SME qualification checklist:
+  - Procurement volume RM 10K+/mo
+  - Has existing supplier network
+  - Willing to test new digital workflows
+- Onboarding process:
+  - Intro meeting + demo
+  - SupplyIT.io registration
+  - Account walkthrough
+  - Training session for staff
+- Materials required:
+  - SME playbook PDF
+  - Walkthrough video (optional)
+  - WhatsApp/Slack support group
+
+---
+
+### 2. 🏬 **Supplier Workflow SOP (Owner: Muhaimin)**
+- Partnering with existing suppliers of onboarded SMEs
+- Listing & catalog setup
+- PO receiving & fulfillment testing
+- Optional commission waivers during pilot
+- Documenting bottlenecks in inventory, delivery, or pricing
+
+---
+
+### 3. 🚚 **Driver Ops & Gig Workflow (Owner: Luqman)**
+- Driver onboarding steps:
+  - Digital registration form
+  - ID verification (IC, license)
+  - Vehicle type tagging
+  - Orientation on task app (basic)
+- Gig coordination SOP:
+  - Task received → Accept → Pickup → Dropoff → POD upload
+  - Performance rating system (early MVP version)
+- Support workflows:
+  - Hotline & WhatsApp fallback
+  - Incentive structure (bonus after X tasks)
+
+---
+
+### 4. 🧾 **Document Compliance (Owner: Fiz)**
+- Pilot SMEs & vendors required to use:
+  - Digital POs
+  - Uploaded invoices
+  - POD scans or signature photos
+- Document repository (MVP):
+  - Tagging: Vendor, SME, Delivery ID
+  - Search, download, comment enabled
+  - Basic version control (manual)
+
+---
+
+## 📋 Pilot Timeline Plan (Q4 2026 – Q2 2027)
+
+| Month        | Activities                                           | Lead               |
+|--------------|------------------------------------------------------|--------------------|
+| Oct 2026     | Finalize onboarding materials + test internally     | Fiz, Arif          |
+| Nov 2026     | First SME onboarded + first delivery via platform   | Muhaimin, Luqman   |
+| Dec 2026     | 3 SMEs live + delivery volume starts tracking        | Arif, Luqman       |
+| Jan 2027     | UAT feedback from SMEs & vendors                     | Whole Team         |
+| Feb 2027     | Dashboard v2 launched with analytics & logs          | Fiz                |
+| Mar 2027     | Grant discussions initiated based on pilot success   | Irfan              |
+
+---
+
+## 📈 KPI & Reporting Dashboard (Internal)
+
+| KPI                        | Frequency | Owner     |
+|----------------------------|-----------|-----------|
+| Weekly Deliveries          | Weekly    | Luqman    |
+| Registered Drivers         | Monthly   | Luqman    |
+| SME Activity Rate          | Weekly    | Muhaimin  |
+| Average Delivery Time      | Monthly   | Fiz       |
+| Document Submission Compliance | Monthly | Muhaimin |
+| Pilot Feedback Summary     | Biweekly  | Arif      |
+
+---
+
+## 🧾 Risk Areas & Mitigations
+
+| Risk                          | Likelihood | Mitigation                          |
+|-------------------------------|------------|-------------------------------------|
+| Drivers abandon tasks         | Medium     | Task bonus system, fallback hotline |
+| SMEs don't engage daily       | Medium     | Daily touchpoints by Arif           |
+| Delivery delays               | High       | Add buffer time, log root causes    |
+| Document issues (missed POD)  | Medium     | Auto-reminders, manual uploads      |
+| Tech bugs                     | High       | Fiz to deploy hotfixes weekly       |
+
+---
+
+## ✅ Operations To-Do Checklist
+
+- [ ] Create SME Onboarding Template (PDF + form)
+- [ ] Build pilot SME list & contact timeline
+- [ ] Finalize driver task flow & bonus calculator
+- [ ] Set up shared WhatsApp groups for pilots
+- [ ] Prepare grant pitch deck (after 3 months pilot)
+- [ ] Start KPI logs in internal dashboard (Q4 2026)
+- [ ] Run training for Arif & Luqman on demo procedures
+
+---
+
+# 📣 Brand, Marketing & Launch Plan – SupplyIT.io
+
+---
+
+## 🧠 Brand Identity
+
+### 💼 Name:
+**SupplyIT.io**  
+(Supply it → simplify procurement, digitize logistics)
+
+### 🧭 Tagline:
+> “Enterprise-grade logistics infrastructure for Southeast Asia’s SMEs.”
+
+### 🎯 Positioning:
+> The first all-in-one procurement, delivery, and documentation platform **built for SME supply chains** in Southeast Asia — combining marketplace, gig logistics, and compliance into one seamless system.
+
+---
+
+## 🎨 Visual Brand Direction
+
+| Element         | Direction                                                  |
+|-----------------|------------------------------------------------------------|
+| Color Palette   | Trust-centric: Navy Blue, Slate Gray, Soft White, Accent Green |
+| Font            | Neutral sans-serif (e.g. Inter, Manrope, or Satoshi)       |
+| Logo Concept    | Minimal logotype with chain/route/iconography variation    |
+| Iconography     | Supply chain, documents, trucks, SME storefronts           |
+| Motion Elements | Clean dashboard transitions, delivery route animations     |
+| Tone of Voice   | Professional, accessible, SME-friendly                     |
+
+---
+
+## 🛠️ Key Brand Assets To Create (Q4 2025–Q1 2026)
+
+- [ ] Logo (main, monochrome, icon version)
+- [ ] Color & typography system (Figma tokenized)
+- [ ] Slide deck template (pitch + product)
+- [ ] Business card + one-pager for in-person meetings
+- [ ] Pilot playbook for SMEs (PDF + web)
+- [ ] Social banners (LinkedIn, Twitter, Facebook)
+- [ ] Explainer video or teaser trailer (Q1 2026)
+
+---
+
+## 📈 Marketing Strategy – MVP Phase (2026–2027)
+
+### 🔰 Phase 1: **Pre-Launch Awareness (Q4 2025–Q2 2026)**
+| Channel     | Action Item                                              | Owner    |
+|-------------|-----------------------------------------------------------|----------|
+| Landing Page| Basic website w/ waitlist form                           | Fiz      |
+| Social Tease| Create social handles & teaser graphics (coming soon)    | Arif     |
+| BD Outreach | Warm intros to SME leads + supplier contacts             | Arif     |
+| PR Softdrop | Early-stage feature in logistics/tech newsletters        | Irfan    |
+| Investor List| Prepare launch update email for pre-seed investors      | Irfan    |
+
+---
+
+### 🧪 Phase 2: **Pilot Launch (Q4 2026–Q2 2027)**
+| Channel     | Action Item                                              | Owner    |
+|-------------|-----------------------------------------------------------|----------|
+| Soft Launch| Limited access pilot with 3 SMEs                          | Team     |
+| Launch Post| LinkedIn post + newsletter (with delivery KPI stats)     | Arif     |
+| PR Release | Official pilot launch press release                      | Irfan    |
+| Video Teaser| MVP walkthrough video (1 min)                            | Fiz      |
+| Testimonials| Capture 3 quotes/videos from SME clients                 | Arif     |
+| Demo Days  | Pitch to gov agencies / SME associations (MDEC, etc.)    | Irfan    |
+
+---
+
+### 🌱 Phase 3: **Traction Expansion (Q3 2027+)**
+- Launch public SME onboarding funnel
+- Build blog case studies (construction, retail verticals)
+- Run performance marketing (LinkedIn, retargeting, Google Ads)
+- Pitch for SME tech grant coverage
+
+---
+
+## 📢 Core Messaging Framework
+
+| Audience       | Pain Point                              | Our Message                                       |
+|----------------|------------------------------------------|--------------------------------------------------|
+| SME Owners     | Procurement too manual, too expensive     | "Digitize your supply chain in 3 clicks."        |
+| Suppliers      | Messy POs, hard to track payments         | "Faster fulfillment, smarter buyer network."     |
+| Drivers        | Inconsistent income, poor gig platforms   | "Earn flexibly, get paid transparently."         |
+| Investors/Grants| Legacy systems block SME growth          | "We power the SME backbone of Southeast Asia."   |
+
+---
+
+## 🚀 Launch Checklist
+
+| Asset                             | Target Date | Owner    |
+|----------------------------------|-------------|----------|
+| Landing Page + Waitlist          | Oct 2025    | Fiz      |
+| Logo + Brand Kit (Color, Font)   | Nov 2025    | UI/UX Team |
+| Social Setup + Teaser Graphics   | Nov 2025    | Arif     |
+| MVP Teaser Video (v1)            | Dec 2025    | Fiz      |
+| Pilot Client Quotes/Logos        | Mar 2027    | Arif     |
+| Launch Press Release             | Apr 2027    | Irfan    |
+| SME Onboarding Funnel            | May 2027    | Arif     |
+| Google Sheet for Testimonials    | Ongoing     | All team |
+
+---
+
+## 💬 Suggested Hashtags & Handles
+- #SupplyIT #SMElogistics #ProcureSmart #DigitizeDelivery
+- Twitter: `@supplyit_io`
+- LinkedIn: `linkedin.com/company/supplyit`
+- Facebook: `/supplyitofficial`
+
+---
+
+## ✅ Brand & Launch To-Do
+
+- [ ] Finalize visual identity & upload to shared brand kit folder
+- [ ] Set up Notion Launch Board
+- [ ] Prepare all brand assets in Figma
+- [ ] Draft PR email + pitch for gov partnership/press
+- [ ] Capture SME feedback quotes by Month 3 of pilot
+
+---
+# 🧑‍💼 Team Structure, Roles & Culture – SupplyIT.io
+
+---
+
+## 🧭 Founding Philosophy
+
+> We’re not just building a logistics platform — we’re building a **culture of execution, integrity, and impact** that transforms how SMEs operate in Southeast Asia.
+
+We lead with trust, clarity, and momentum. Every founding member is here to **deliver**, not just to ideate.
+
+---
+
+## 🧑‍💼 Core Team Org Chart (Pre-Seed Stage)
+
+
+### 👤 Role Breakdown
+
+| Name       | Role                         | Ownership | Core Responsibilities                                  |
+|------------|------------------------------|-----------|--------------------------------------------------------|
+| **Fiz**    | CEO & CTO                    | 45%       | Product, tech, architecture, dashboard, team leadership |
+| **Muhaimin** | COO                         | 30%       | SME operations, supplier coordination, GTM execution   |
+| **Irfan**  | CRO (Chief Relations Officer)| 5% (vesting) | Investor, government, PR, grant liaison             |
+| **Luqman** | CLO (Chief Logistics Officer)| 5% (vesting) | Delivery workforce, gig ops, route testing          |
+| **Arif**   | CE (Chief Evangelist)        | 5% (vesting) | Public brand, SME onboarding, external comms        |
+
+> Vesting: 4 years with 1-year cliff (Irfan, Luqman, Arif)
+
+---
+
+## 🌱 Culture Values
+
+### 1. 🚀 **Bias to Execute**
+We build, test, and ship — not just plan.
+
+### 2. 🔒 **Earned Trust**
+You own your scope. You’re trusted to deliver it.
+
+### 3. 🌍 **Clarity = Impact**
+Clear communication beats overcommunication. Default to clarity.
+
+### 4. 🧠 **We Learn Forward**
+Mistakes = feedback loops. We evolve through doing.
+
+### 5. 🎯 **User-First Always**
+SMEs, drivers, and suppliers aren't just users — they’re our ecosystem.
+
+---
+
+## 📅 Founding Team Rituals
+
+| Ritual                     | Frequency | Format           | Owner         |
+|----------------------------|-----------|------------------|---------------|
+| Weekly Sync                | Weekly    | 60-min call       | Fiz           |
+| Pilot Status Review        | Biweekly  | Dashboard + Miro  | Muhaimin      |
+| Internal Demo Day          | Monthly   | MVP walk-through  | Fiz           |
+| Culture Check + Retros     | Quarterly | Icebreakers + Wins| Arif          |
+| Investor Update Draft      | Monthly   | Metrics sheet     | Irfan         |
+| Founder 1:1 Check-Ins      | Quarterly | Deep-dive convo   | Fiz & All     |
+
+---
+
+## 🏗️ Roles to Hire (Post-Seed)
+
+| Role                  | Target Hire | Priority | Notes                                           |
+|-----------------------|-------------|----------|-------------------------------------------------|
+| Frontend Engineer     | Q4 2026     | 🔥 High  | Assist Fiz with dashboard + portal rollout      |
+| Driver Ops Manager    | Q1 2027     | 🔥 High  | Support Luqman on scaling driver SOPs           |
+| Sales Executive       | Q2 2027     | ⭐ Medium| Scale BD beyond Arif for SME volume             |
+| UI/UX Designer        | Q2 2027     | ⭐ Medium| Refine product interface for long-term polish   |
+| Grants/Compliance Lead| Q3 2027     | ⭐ Medium| Support Irfan on documentation & audit process  |
+
+---
+
+## 🧭 Internal Org Tools
+
+- **Dashboard** – Burn, milestone, KPI tracking
+- **Notion** – Team docs, meeting notes, brand hub
+- **Trello or Linear** – Product and ops task board
+- **WhatsApp** – SME & Driver comms
+- **Slack (optional)** – Team async updates (later stage)
+
+---
+
+## 💬 Culture & Onboarding Playbook (To-Do)
+
+- [ ] Create Notion “Start Here” page for team
+- [ ] Add values + principles into onboarding doc
+- [ ] Draft internal equity education explainer
+- [ ] Collect each founder's “Why I'm Here” paragraph
+- [ ] Assign buddy system for all new hires
+
+---
+
+## 🏁 Final Culture Reminders
+
+- 💡 Great teams don’t just work fast — they work in sync.
+- 🛠️ No one is "just" their title. Founding teams wear hats.
+- 🫱 You're not working *for* SupplyIT — you're building *with* it.
+
+---
+
+# 🛡️ Risk Management, Compliance & SWOT – SupplyIT.io
+
+---
+
+## ⚠️ Top Risks & Mitigation Plan
+
+### 🔧 Technical Risks
+
+| Risk                                      | Likelihood | Mitigation Strategy                                  |
+|-------------------------------------------|------------|------------------------------------------------------|
+| Platform instability during pilot         | Medium     | Staging environment, CI/CD hotfix pipeline (Fiz)     |
+| Delivery sync failures (driver offline)   | High       | Local cache, retry queue, fallback manual POD upload |
+| Integration complexity (future ERP, APIs) | Medium     | Modular API gateway + versioning from day one        |
+| Analytics performance under data growth   | Medium     | Pre-aggregation, Redis caching, SQL optimization     |
+
+---
+
+### 🚚 Operational Risks
+
+| Risk                                  | Likelihood | Mitigation Strategy                                  |
+|---------------------------------------|------------|------------------------------------------------------|
+| Driver unreliability or drop-off      | High       | Bonus system, performance score, fallback SOP        |
+| SME churn post-pilot                  | Medium     | Relationship management by Arif, clear ROI dashboard |
+| Delivery delays                       | Medium     | SLA tracking, route buffer, postmortem report loop   |
+| Supplier onboarding friction          | Medium     | Muhaimin-led support, zero-commission pilot period   |
+
+---
+
+### 📉 Business & Financial Risks
+
+| Risk                                 | Likelihood | Mitigation Strategy                                  |
+|--------------------------------------|------------|------------------------------------------------------|
+| Runway exhaustion before seed        | Medium     | Pre-seed extension SAFE option in Q2 2027            |
+| Delayed grant disbursement           | Medium     | Backup budget from buffer/working capital            |
+| Valuation pushback in seed round     | Low        | Strong traction, pilot metrics, updated projections  |
+
+---
+
+### 📑 Compliance & Legal Risks
+
+| Risk                                  | Likelihood | Mitigation Strategy                                  |
+|---------------------------------------|------------|------------------------------------------------------|
+| Improper handling of e-signatures     | Medium     | Audit-ready logs, consent check, terms of use page   |
+| Driver safety & insurance coverage    | High       | Partner with vetted platforms or basic protection    |
+| Misuse of funds or investor concerns  | Low        | Internal dashboard with burn + milestone transparency|
+| IP ownership disputes (pre-incorp)    | Medium     | Founder agreements + IP assignment (signed)          |
+
+---
+
+## 📄 Compliance Action Plan
+
+| Area                    | Action Item                                 | Owner      | Due Date   |
+|-------------------------|---------------------------------------------|------------|------------|
+| Founder Agreement       | Vesting + IP clauses signed via DocuSign    | Fiz        | Oct 2025   |
+| Pilot NDA / SLA Drafts | SME & Supplier contracts, privacy terms     | Muhaimin   | Nov 2025   |
+| Privacy & Data Policy  | MVP privacy policy for pilot SMEs           | Fiz        | Dec 2025   |
+| Platform Terms of Use  | Driver + client usage terms, refund policy  | Fiz        | Jan 2026   |
+| Accounting SOP         | Setup of digital bookkeeping template       | TBD        | Feb 2026   |
+| Grant Audit File Prep  | Keep receipts, agreements, dashboard logs   | Irfan      | Mar 2026   |
+
+---
+
+## 🧭 SWOT Analysis – SupplyIT.io
+
+### ✅ Strengths
+- Built-for-SEA: hyper-relevant to local SME pain points
+- Tech-led team with domain logistics co-founders
+- All-in-one stack (procurement + delivery + documents)
+- Strong early traction plan (pilot KPIs, BD targets)
+
+### 🚧 Weaknesses
+- No formal incorporation (until post-pre-seed)
+- Single tech founder (Fiz) handles all core systems
+- Limited internal budget for R&D pre-seed
+- Heavy reliance on part-time/founding team
+
+### 📈 Opportunities
+- RM500B+ SME procurement market (MY) + regional expansion
+- First-mover in B2B logistics built specifically for SMEs
+- Access to gov grants, ESG-linked funding, SME digitization push
+- Future verticals: Construction, Events, Agriculture, Healthcare
+
+### 🛑 Threats
+- Competitor replication post-pilot visibility
+- SME adoption curve (training, onboarding friction)
+- Logistic delays or operational failure during early pilots
+- External market pressure (economic slowdown, regulation)
+
+---
+
+## ✅ Risk & Compliance To-Do List
+
+- [ ] Finalize founder agreements with IP assignment clause
+- [ ] Draft SME/Supplier NDA + SLA template
+- [ ] Create simple privacy policy for MVP launch
+- [ ] Build risk register module in internal dashboard
+- [ ] Begin audit-ready log collection from pilot day one
+- [ ] Assign part-time legal/compliance advisor post-seed
+
+---
