@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 // import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "./db";
 import bcrypt from "bcryptjs";
+import { Role } from "./rbac";
 
 export const authOptions: NextAuthOptions = {
   // adapter: PrismaAdapter(prisma), // Commented out for credentials provider
@@ -78,7 +79,7 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (token && session.user) {
-        session.user.role = token.role as string;
+        session.user.role = token.role as Role;
         session.user.id = token.id as string;
       }
       return session;

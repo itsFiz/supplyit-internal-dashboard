@@ -6,103 +6,71 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Starting database seed...');
 
-  // Create admin user
-  const hashedPassword = await bcrypt.hash('admin123', 12);
-  
-  const adminUser = await prisma.user.upsert({
-    where: { email: 'admin@supplyit.io' },
-    update: {},
-    create: {
-      email: 'admin@supplyit.io',
-      name: 'Admin User',
-      password: hashedPassword,
-      role: 'FOUNDER',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-      emailVerified: new Date(),
-      lastLogin: new Date(),
-    },
-  });
+  // Clear existing users and team members
+  await prisma.teamMember.deleteMany({});
+  await prisma.user.deleteMany({});
 
-  // Create sample users for different roles
-  const sampleUsers = [
+  // Create real team users
+  const hashedPassword = await bcrypt.hash('supplyit2024', 12);
+  
+  // Founders
+  const founders = [
     {
-      email: 'finance@supplyit.io',
-      name: 'Finance Controller',
-      role: 'FINANCE_CONTROLLER' as const,
+      email: 'fiz@supplyit.io',
+      name: 'Fiz',
+      role: 'FOUNDER' as const,
       password: hashedPassword,
+      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
     },
     {
-      email: 'product@supplyit.io',
-      name: 'Product Owner',
-      role: 'PRODUCT_OWNER' as const,
+      email: 'muhaimin@supplyit.io',
+      name: 'Muhaimin',
+      role: 'FOUNDER' as const,
       password: hashedPassword,
-    },
-    {
-      email: 'ops@supplyit.io',
-      name: 'Operations Manager',
-      role: 'OPS_MANAGER' as const,
-      password: hashedPassword,
-    },
-    {
-      email: 'tech@supplyit.io',
-      name: 'Tech Lead',
-      role: 'TECH_LEAD' as const,
-      password: hashedPassword,
-    },
-    {
-      email: 'investor@supplyit.io',
-      name: 'Investor',
-      role: 'INVESTOR' as const,
-      password: hashedPassword,
+      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
     },
   ];
 
-  for (const userData of sampleUsers) {
-    await prisma.user.upsert({
-      where: { email: userData.email },
-      update: {},
-      create: {
+  // Team Members
+  const teamMembers = [
+    {
+      email: 'arif@supplyit.io',
+      name: 'Arif',
+      role: 'FOUNDING_TEAM' as const,
+      password: hashedPassword,
+      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face',
+    },
+    {
+      email: 'irfan@supplyit.io',
+      name: 'Irfan',
+      role: 'FOUNDING_TEAM' as const,
+      password: hashedPassword,
+      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+    },
+    {
+      email: 'luqman@supplyit.io',
+      name: 'Luqman',
+      role: 'FOUNDING_TEAM' as const,
+      password: hashedPassword,
+      image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&h=150&fit=crop&crop=face',
+    },
+  ];
+
+  // Create all users
+  const allUsers = [...founders, ...teamMembers];
+  
+  for (const userData of allUsers) {
+    await prisma.user.create({
+      data: {
         ...userData,
-        image: `https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face&${Math.random()}`,
         emailVerified: new Date(),
         lastLogin: new Date(),
       },
     });
   }
 
-  // Create sample budget data
-  const budgetData = [
-    {
-      category: 'Development',
-      estimatedCost: 50000,
-      actualCost: 32000,
-      notes: 'Core platform development and feature implementation',
-    },
-    {
-      category: 'Marketing',
-      estimatedCost: 30000,
-      actualCost: 15000,
-      notes: 'Digital marketing campaigns and brand awareness',
-    },
-    {
-      category: 'Operations',
-      estimatedCost: 25000,
-      actualCost: 22000,
-      notes: 'Operational costs and logistics setup',
-    },
-    {
-      category: 'Legal',
-      estimatedCost: 15000,
-      actualCost: 8000,
-      notes: 'Legal compliance and documentation',
-    },
-  ];
-
-  for (const budget of budgetData) {
-    await prisma.budgetCategory.create({
-      data: budget,
-    });
-  }
+  // Note: Budget data is now seeded separately using seed-budget.ts
+  // with the new nested main category/subcategory structure
 
   // Create sample milestones
   const milestoneData = [
@@ -139,7 +107,7 @@ async function main() {
     });
   }
 
-  // Create sample team members
+  // Create real team members data
   const teamData = [
     {
       role: 'CEO & CTO',
@@ -219,8 +187,11 @@ async function main() {
   }
 
   console.log('✅ Database seeded successfully!');
-  console.log('👤 Admin user: admin@supplyit.io / admin123');
-  console.log('👥 Sample users created for different roles');
+  console.log('👥 Real team users created:');
+  console.log('   Founders: fiz@supplyit.io, muhaimin@supplyit.io');
+  console.log('   Team Members: arif@supplyit.io, irfan@supplyit.io, luqman@supplyit.io');
+  console.log('🔑 Password for all users: supplyit2024');
+  console.log('💡 Run "npx tsx prisma/seed-budget.ts" to seed budget data');
 }
 
 main()

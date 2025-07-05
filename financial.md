@@ -73,6 +73,6 @@
 - [ ] CAC & LTV projections + breakeven point
 - [ ] Burn rate vs revenue cash flow forecast
 - [ ] Scenario visualizations (bar chart/line chart)
-- [ ] Unit economics dashboard (pilot vs scale)
+- [ ] Unit economics dashboard (pilot vs scale)    
 
 ---

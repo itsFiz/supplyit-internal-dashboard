@@ -2,52 +2,38 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { 
-  LayoutDashboard, 
-  Users, 
-  Flag, 
-  Wallet, 
-  Menu, 
-  X, 
-  BarChart3, 
-  Settings, 
-  TrendingUp,
-  Target,
-  Building2,
-  DollarSign,
-  Code,
-  Wrench,
-  Megaphone,
-  FolderOpen,
-  Calculator,
-  TrendingDown,
-} from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Menu, 
+  X,
+} from 'lucide-react';
+import { 
+  getNavigationByCategory, 
+  CATEGORY_ORDER, 
+  getCategoryStyling,
+  getRoleDisplayName,
+  getRoleDescription,
 
-const nav = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/strategy', label: 'Strategy & Vision', icon: Target },
-  { href: '/legal', label: 'Legal & Structure', icon: Building2 },
-  { href: '/fundraising', label: 'Fundraising & Finance', icon: DollarSign },
-  { href: '/product', label: 'Product & Tech', icon: Code },
-  { href: '/operations', label: 'Operations & Pilot', icon: Wrench },
-  { href: '/brand', label: 'Brand & Marketing', icon: Megaphone },
-  { href: '/documents', label: 'Document Center', icon: FolderOpen },
-  { href: '/team', label: 'Team', icon: Users },
-  { href: '/milestones', label: 'Milestones', icon: Flag },
-  { href: '/financial-metrics', label: 'Financial Metrics', icon: Calculator },
-  { href: '/financial-projections', label: 'Financial Projections', icon: TrendingDown },
-  { href: '/budget', label: 'Budget', icon: Wallet },
-  { href: '/analytics', label: 'Analytics', icon: BarChart3 },
-  { href: '/roadmap', label: 'Roadmap', icon: TrendingUp },
-  { href: '/settings', label: 'Settings', icon: Settings },
-];
+} from '../lib/navigation';
+import { Role } from '../lib/rbac';
 
-export default function Sidebar() {
+interface SidebarProps {
+  currentRole?: Role;
+}
+
+export default function Sidebar({ currentRole }: SidebarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const pathname = usePathname();
+  const { data: session } = useSession();
+  
+  // Get user role from session or prop, default to TEAM if not available
+  const userRole = currentRole || (session?.user?.role as Role) || 'TEAM';
+
+  // Debug logging
+  console.log('Sidebar rendered with role:', userRole, 'currentRole prop:', currentRole);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -65,12 +51,20 @@ export default function Sidebar() {
     closed: { x: '-100%' }
   };
 
-
-
   const menuItemVariants = {
     hidden: { opacity: 0, x: -20 },
     visible: { opacity: 1, x: 0 }
   };
+
+  // Get navigation items for current user role
+  const navigationByCategory = getNavigationByCategory(userRole);
+
+  // Debug logging for navigation changes
+  console.log('Sidebar navigation updated for role:', userRole);
+  console.log('Available categories:', Object.keys(navigationByCategory));
+  Object.entries(navigationByCategory).forEach(([category, items]) => {
+    console.log(`${category}: ${items.length} items`);
+  });
 
   return (
     <>
@@ -143,12 +137,14 @@ export default function Sidebar() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
+          key={userRole}
         >
           <div className="flex items-center gap-3">
             <motion.div 
               className="relative"
               whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.2 }}
+              animate={currentRole ? { scale: [1, 1.1, 1] } : {}}
+              transition={{ duration: 0.3 }}
             >
               <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">
                 S
@@ -162,6 +158,11 @@ export default function Sidebar() {
             <div>
               <h1 className="text-xl font-bold gradient-text">SupplyIT</h1>
               <p className="text-xs text-slate-400">Internal Dashboard</p>
+              {currentRole && (
+                <p className="text-xs text-yellow-400 mt-1">
+                  Testing: {getRoleDisplayName(userRole)}
+                </p>
+              )}
             </div>
           </div>
         </motion.div>
@@ -169,284 +170,78 @@ export default function Sidebar() {
         {/* Navigation - Scrollable */}
         <nav className="flex-1 overflow-y-auto px-6 pb-4 min-h-0 sidebar-scroll">
           <div className="flex flex-col gap-2">
-            {/* Dashboard */}
-            <motion.div 
-              className="mb-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-4">Dashboard</h3>
-              {nav.slice(0, 1).map(({ href, label, icon: Icon }) => (
-                <motion.div
-                  key={href}
-                  variants={menuItemVariants}
-                  initial="hidden"
-                  animate="visible"
-                  transition={{ duration: 0.3 }}
+            {/* Render navigation by category */}
+            {CATEGORY_ORDER.map((category, categoryIndex) => {
+              const items = navigationByCategory[category];
+              if (!items || items.length === 0) return null;
+              
+              const styling = getCategoryStyling(category);
+              
+              return (
+                <motion.div 
+                  key={category}
+                  className="mb-4"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 + categoryIndex * 0.1 }}
                 >
-                  <Link 
-                    href={href} 
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`
-                      group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300
-                      ${pathname === href 
-                        ? 'bg-gradient-to-r from-blue-500/20 to-cyan-500/20 text-white border border-blue-500/30 shadow-lg' 
-                        : 'text-slate-300 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10'
-                      }
-                    `}
-                  >
-                    <motion.div
-                      whileHover={{ rotate: 5, scale: 1.1 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <Icon className={`w-5 h-5 transition-all duration-300 ${pathname === href ? 'text-blue-400' : 'text-slate-400 group-hover:text-white'}`} />
-                    </motion.div>
-                    <span className="font-medium">{label}</span>
-                    {pathname === href && (
-                      <motion.div 
-                        className="ml-auto w-2 h-2 bg-blue-400 rounded-full"
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      ></motion.div>
-                    )}
-                  </Link>
+                  <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-4">
+                    {category} ({items.length})
+                  </h3>
+                  {items.map((item, index) => {
+                    const Icon = item.icon;
+                    const isActive = pathname === item.href;
+                    
+                    return (
+                      <motion.div
+                        key={item.href}
+                        variants={menuItemVariants}
+                        initial="hidden"
+                        animate="visible"
+                        transition={{ duration: 0.3, delay: index * 0.05 }}
+                      >
+                        <Link 
+                          href={item.href} 
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className={`
+                            group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300
+                            ${isActive 
+                              ? `bg-gradient-to-r ${styling.gradient} text-white border ${styling.borderColor} shadow-lg` 
+                              : 'text-slate-300 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10'
+                            }
+                          `}
+                          title={item.description}
+                        >
+                          <motion.div
+                            whileHover={{ rotate: 5, scale: 1.1 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <Icon className={`w-5 h-5 transition-all duration-300 ${isActive ? styling.iconColor : 'text-slate-400 group-hover:text-white'}`} />
+                          </motion.div>
+                          <span className="font-medium">{item.label}</span>
+                          {item.badge && (
+                            <span className="ml-auto px-2 py-1 text-xs bg-red-500 text-white rounded-full">
+                              {item.badge}
+                            </span>
+                          )}
+                          {isActive && (
+                            <motion.div 
+                              className={`ml-auto w-2 h-2 ${styling.dotColor} rounded-full`}
+                              animate={{ scale: [1, 1.2, 1] }}
+                              transition={{ duration: 2, repeat: Infinity }}
+                            ></motion.div>
+                          )}
+                        </Link>
+                      </motion.div>
+                    );
+                  })}
                 </motion.div>
-              ))}
-            </motion.div>
-
-            {/* Strategic Categories */}
-            <motion.div 
-              className="mb-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-4">Strategic Planning</h3>
-              {nav.slice(1, 7).map(({ href, label, icon: Icon }, index) => (
-                <motion.div
-                  key={href}
-                  variants={menuItemVariants}
-                  initial="hidden"
-                  animate="visible"
-                  transition={{ duration: 0.3, delay: index * 0.05 }}
-                >
-                  <Link 
-                    href={href} 
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`
-                      group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300
-                      ${pathname === href 
-                        ? 'bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-white border border-purple-500/30 shadow-lg' 
-                        : 'text-slate-300 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10'
-                      }
-                    `}
-                  >
-                    <motion.div
-                      whileHover={{ rotate: 5, scale: 1.1 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <Icon className={`w-5 h-5 transition-all duration-300 ${pathname === href ? 'text-purple-400' : 'text-slate-400 group-hover:text-white'}`} />
-                    </motion.div>
-                    <span className="font-medium">{label}</span>
-                    {pathname === href && (
-                      <motion.div 
-                        className="ml-auto w-2 h-2 bg-purple-400 rounded-full"
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      ></motion.div>
-                    )}
-                  </Link>
-                </motion.div>
-              ))}
-            </motion.div>
-
-            {/* Document Center */}
-            <motion.div 
-              className="mb-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
-              <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-4">Document Management</h3>
-              {nav.slice(7, 8).map(({ href, label, icon: Icon }) => (
-                <motion.div
-                  key={href}
-                  variants={menuItemVariants}
-                  initial="hidden"
-                  animate="visible"
-                  transition={{ duration: 0.3 }}
-                >
-                  <Link 
-                    href={href} 
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`
-                      group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300
-                      ${pathname === href 
-                        ? 'bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-white border border-green-500/30 shadow-lg' 
-                        : 'text-slate-300 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10'
-                      }
-                    `}
-                  >
-                    <motion.div
-                      whileHover={{ rotate: 5, scale: 1.1 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <Icon className={`w-5 h-5 transition-all duration-300 ${pathname === href ? 'text-green-400' : 'text-slate-400 group-hover:text-white'}`} />
-                    </motion.div>
-                    <span className="font-medium">{label}</span>
-                    {pathname === href && (
-                      <motion.div 
-                        className="ml-auto w-2 h-2 bg-green-400 rounded-full"
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      ></motion.div>
-                    )}
-                  </Link>
-                </motion.div>
-              ))}
-            </motion.div>
-
-            {/* Financial Management */}
-            <motion.div 
-              className="mb-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-            >
-              <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-4">Financial Management</h3>
-              {nav.slice(8, 10).map(({ href, label, icon: Icon }, index) => (
-                <motion.div
-                  key={href}
-                  variants={menuItemVariants}
-                  initial="hidden"
-                  animate="visible"
-                  transition={{ duration: 0.3, delay: index * 0.05 }}
-                >
-                  <Link 
-                    href={href} 
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`
-                      group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300
-                      ${pathname === href 
-                        ? 'bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-white border border-green-500/30 shadow-lg' 
-                        : 'text-slate-300 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10'
-                      }
-                    `}
-                  >
-                    <motion.div
-                      whileHover={{ rotate: 5, scale: 1.1 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <Icon className={`w-5 h-5 transition-all duration-300 ${pathname === href ? 'text-green-400' : 'text-slate-400 group-hover:text-white'}`} />
-                    </motion.div>
-                    <span className="font-medium">{label}</span>
-                    {pathname === href && (
-                      <motion.div 
-                        className="ml-auto w-2 h-2 bg-green-400 rounded-full"
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      ></motion.div>
-                    )}
-                  </Link>
-                </motion.div>
-              ))}
-            </motion.div>
-
-            {/* Operations */}
-            <motion.div 
-              className="mb-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-            >
-              <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-4">Operations</h3>
-              {nav.slice(10, 15).map(({ href, label, icon: Icon }, index) => (
-                <motion.div
-                  key={href}
-                  variants={menuItemVariants}
-                  initial="hidden"
-                  animate="visible"
-                  transition={{ duration: 0.3, delay: index * 0.05 }}
-                >
-                  <Link 
-                    href={href} 
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`
-                      group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300
-                      ${pathname === href 
-                        ? 'bg-gradient-to-r from-orange-500/20 to-red-500/20 text-white border border-orange-500/30 shadow-lg' 
-                        : 'text-slate-300 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10'
-                      }
-                    `}
-                  >
-                    <motion.div
-                      whileHover={{ rotate: 5, scale: 1.1 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <Icon className={`w-5 h-5 transition-all duration-300 ${pathname === href ? 'text-orange-400' : 'text-slate-400 group-hover:text-white'}`} />
-                    </motion.div>
-                    <span className="font-medium">{label}</span>
-                    {pathname === href && (
-                      <motion.div 
-                        className="ml-auto w-2 h-2 bg-orange-400 rounded-full"
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      ></motion.div>
-                    )}
-                  </Link>
-                </motion.div>
-              ))}
-            </motion.div>
-
-            {/* Settings */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.7 }}
-            >
-              <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-4">System</h3>
-              {nav.slice(15).map(({ href, label, icon: Icon }) => (
-                <motion.div
-                  key={href}
-                  variants={menuItemVariants}
-                  initial="hidden"
-                  animate="visible"
-                  transition={{ duration: 0.3 }}
-                >
-                  <Link 
-                    href={href} 
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`
-                      group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300
-                      ${pathname === href 
-                        ? 'bg-gradient-to-r from-slate-500/20 to-gray-500/20 text-white border border-slate-500/30 shadow-lg' 
-                        : 'text-slate-300 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10'
-                      }
-                    `}
-                  >
-                    <motion.div
-                      whileHover={{ rotate: 5, scale: 1.1 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <Icon className={`w-5 h-5 transition-all duration-300 ${pathname === href ? 'text-slate-400' : 'text-slate-400 group-hover:text-white'}`} />
-                    </motion.div>
-                    <span className="font-medium">{label}</span>
-                    {pathname === href && (
-                      <motion.div 
-                        className="ml-auto w-2 h-2 bg-slate-400 rounded-full"
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      ></motion.div>
-                    )}
-                  </Link>
-                </motion.div>
-              ))}
-            </motion.div>
+              );
+            })}
           </div>
         </nav>
         
-        {/* User section - Fixed at bottom, no dropdown */}
+        {/* User section - Fixed at bottom */}
         <motion.div 
           className="flex-shrink-0 p-6 pt-4 border-t border-white/10"
           initial={{ opacity: 0, y: 20 }}
@@ -455,20 +250,34 @@ export default function Sidebar() {
         >
           <div className="flex items-center gap-3">
             <motion.div 
-              className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-semibold cursor-pointer border-2 border-white/10"
+              className="relative"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              F
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-semibold cursor-pointer border-2 border-white/10">
+                {session?.user?.name?.[0] || 'U'}
+              </div>
+              <motion.div 
+                className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-slate-900"
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              ></motion.div>
             </motion.div>
-            <motion.div 
-              className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-slate-900"
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            ></motion.div>
-            <div>
-              <p className="text-sm font-medium text-white">Fiz</p>
-              <p className="text-xs text-slate-400">Admin</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-white truncate">
+                {session?.user?.name || 'User'}
+              </p>
+              <p className="text-xs text-slate-400 truncate">
+                {getRoleDisplayName(userRole)}
+                {currentRole && (
+                  <span className="ml-2 px-1 py-0.5 bg-yellow-500/20 text-yellow-400 text-xs rounded">
+                    TEST
+                  </span>
+                )}
+              </p>
+              <p className="text-xs text-slate-500 truncate">
+                {getRoleDescription(userRole)}
+              </p>
             </div>
           </div>
         </motion.div>

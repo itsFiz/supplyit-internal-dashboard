@@ -106,8 +106,8 @@ export default function ProductPage() {
           owner: "Fiz + Intern"
         }
       ],
-      ownership: {
-        cto: "Fiz - Architecture, core development, deployment",
+      ownership: { 
+        CTO: "Fiz - Architecture, core development, deployment",
         intern: "UI/UX assistance, testing, documentation",
         future: "Frontend engineer (Q4 2026), Backend engineer (Q1 2027)"
       }

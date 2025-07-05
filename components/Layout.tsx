@@ -1,10 +1,34 @@
 'use client';
-import { ReactNode } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import Topbar from './Topbar';
+import RoleSwitcher from './RoleSwitcher';
 import { motion } from 'framer-motion';
+import { Role } from '../lib/rbac';
 
 export default function Layout({ children }: { children: ReactNode }) {
+  const [currentRole, setCurrentRole] = useState<Role>('FOUNDER');
+
+  const handleRoleChange = (newRole: Role) => {
+    console.log('=== LAYOUT ROLE CHANGE ===');
+    console.log('Previous role:', currentRole);
+    console.log('New role:', newRole);
+    console.log('Setting new role...');
+    setCurrentRole(newRole);
+    console.log('Role set successfully');
+    console.log('=== LAYOUT ROLE CHANGE COMPLETE ===');
+  };
+
+  // Debug logging
+  console.log('Layout rendered with role:', currentRole);
+
+  // Monitor role changes
+  useEffect(() => {
+    console.log('=== ROLE CHANGE DETECTED ===');
+    console.log('New role in effect:', currentRole);
+    console.log('=== ROLE CHANGE EFFECT COMPLETE ===');
+  }, [currentRole]);
+
   return (
     <motion.div 
       className="flex min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white relative overflow-hidden"
@@ -57,7 +81,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         ></motion.div>
       </div>
       
-      <Sidebar />
+      <Sidebar currentRole={currentRole} key={currentRole} />
       <motion.div 
         className="flex-1 flex flex-col min-w-0 relative z-10 ml-72"
         initial={{ opacity: 0, x: 20 }}
@@ -71,6 +95,13 @@ export default function Layout({ children }: { children: ReactNode }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
+          {/* Role indicator for testing */}
+          <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+            <p className="text-sm text-yellow-400">
+              <strong>Testing Mode:</strong> Current Role: {currentRole}
+            </p>
+          </div>
+          
           <motion.div 
             className="glass-effect rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 min-h-[calc(100vh-200px)]"
             initial={{ opacity: 0, scale: 0.95 }}
@@ -81,6 +112,11 @@ export default function Layout({ children }: { children: ReactNode }) {
           </motion.div>
         </motion.main>
       </motion.div>
+      
+      {/* Role Switcher for Development - Positioned to avoid sidebar */}
+      <div className="fixed top-4 right-4 z-[100] md:right-6">
+        <RoleSwitcher currentRole={currentRole} onRoleChange={handleRoleChange} />
+      </div>
     </motion.div>
   );
 } 

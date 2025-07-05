@@ -3,6 +3,7 @@ import Layout from '@/components/Layout';
 import KPICards from '@/components/KPICards';
 import AnalyticsChart from '@/components/AnalyticsChart';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import { 
   DollarSign, 
   Target, 
@@ -18,6 +19,8 @@ import {
 import { motion } from 'framer-motion';
 
 export default function DashboardPage() {
+  const { data: session } = useSession();
+  
   const strategicCategories = [
     {
       href: "/strategy",
@@ -105,7 +108,7 @@ export default function DashboardPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          Welcome back! Here&apos;s an overview of your SupplyIT dashboard.
+          Welcome back, {session?.user?.name || 'User'}! Here&apos;s an overview of SupplyIT relevant metrics.
         </motion.p>
 
         {/* KPI Cards */}

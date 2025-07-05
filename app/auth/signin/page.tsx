@@ -1,10 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { signIn } from 'next-auth/react';
+import { useState, useEffect } from 'react';
+import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -12,6 +11,41 @@ export default function SignIn() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
+  const { data: session, status } = useSession();
+
+  // Redirect to dashboard if user is already authenticated
+  useEffect(() => {
+    if (status === 'authenticated' && session) {
+      router.push('/dashboard');
+    }
+  }, [session, status, router]);
+
+  // Show loading while checking session
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center">
+        <div className="flex items-center space-x-2">
+          <motion.svg 
+            className="h-8 w-8 text-blue-600" 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill="none" 
+            viewBox="0 0 24 24"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          >
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </motion.svg>
+          <span className="text-gray-600">Checking authentication...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render the form if user is authenticated (they'll be redirected)
+  if (status === 'authenticated') {
+    return null;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -196,17 +230,6 @@ export default function SignIn() {
                 'Sign in'
               )}
             </motion.button>
-          </motion.div>
-
-          <motion.div 
-            className="text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.1 }}
-          >
-            <p className="text-sm text-gray-600">
-              Demo credentials: admin@supplyit.io / admin123
-            </p>
           </motion.div>
         </motion.form>
       </motion.div>

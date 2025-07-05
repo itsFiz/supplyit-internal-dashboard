@@ -171,6 +171,7 @@ enum Role {
   INVESTOR
   PILOT_CLIENT
   ADVISOR
+  FOUNDING_TEAM
   TEAM
 }
 
@@ -179,4 +180,25 @@ enum MilestoneStatus {
   IN_PROGRESS
   COMPLETED
   BLOCKED
+}
+
+model BudgetMainCategory {
+  id           Int                @id @default(autoincrement())
+  name         String
+  totalBudget  Float
+  subcategories BudgetSubCategory[]
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+}
+
+model BudgetSubCategory {
+  id             Int                @id @default(autoincrement())
+  name           String
+  estimatedCost  Float
+  actualCost     Float
+  notes          String?
+  mainCategory   BudgetMainCategory @relation(fields: [mainCategoryId], references: [id])
+  mainCategoryId Int
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
 }

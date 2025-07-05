@@ -49,3 +49,121 @@ body {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
 }
+
+/* Custom scrollbar for role switcher dropdown */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: rgba(30, 41, 59, 0.8);
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(71, 85, 105, 0.8);
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.8);
+}
+
+/* Hide scrollbar for Firefox */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(71, 85, 105, 0.8) rgba(30, 41, 59, 0.8);
+}
+
+/* Chart.js canvas background fix for hot reload */
+canvas {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Specific Chart.js styling to prevent white background during hot reload */
+.chartjs-render-monitor {
+  background: transparent !important;
+}
+
+/* Force chart containers to maintain transparency */
+[data-testid="chart-container"] canvas,
+.chart-container canvas {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Prevent white background flashes during component re-renders */
+.bg-white\/5,
+.bg-white\/10,
+[class*="bg-white/"] {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Ensure all budget status cards maintain dark backgrounds */
+.bg-green-500\/10,
+.bg-red-500\/10,
+.bg-yellow-500\/10,
+[class*="bg-green-500/"],
+[class*="bg-red-500/"],
+[class*="bg-yellow-500/"] {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Force dark backgrounds for all card-like elements */
+[class*="backdrop-blur"] {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Prevent white flashes during tab switching */
+.space-y-6,
+.space-y-4,
+div[class*="space-y"] {
+  background-color: transparent !important;
+}
+
+/* Ensure all budget-related elements maintain dark backgrounds */
+.budget-chart,
+.budget-status,
+[class*="budget"] {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Specific fix for budget components */
+.budget-chart-container {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 1rem;
+  min-height: 200px;
+}
+
+/* Define the missing glass-effect class used throughout the app */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Force dark backgrounds on all motion elements during animations */
+div[data-framer-name],
+[class*="motion-div"],
+.framer-motion-element {
+  background-color: transparent !important;
+}
+
+/* Prevent white flashes on all animated containers */
+[style*="opacity"],
+[style*="transform"] {
+  background-color: inherit !important;
+}
+
+/* Target specific budget page elements */
+.budget-page-content,
+.budget-tab-content {
+  background-color: transparent !important;
+}
+
+/* Ensure main layout containers maintain dark backgrounds */
+.min-h-screen {
+  background-color: #0f172a !important;
+}

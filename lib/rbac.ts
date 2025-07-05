@@ -14,6 +14,7 @@ export type Role =
   | 'INVESTOR'
   | 'PILOT_CLIENT'
   | 'ADVISOR'
+  | 'FOUNDING_TEAM'
   | 'TEAM';
 
 // Module types based on PRD
@@ -36,7 +37,7 @@ export type Module =
 const PERMISSION_MATRIX: Record<Role, Record<Module, Permission[]>> = {
   FOUNDER: {
     USER_MANAGEMENT: ['CREATE', 'READ', 'UPDATE', 'DELETE'],
-    CAPITAL_USAGE_BUDGET: ['READ', 'UPDATE'],
+    CAPITAL_USAGE_BUDGET: ['CREATE', 'READ', 'UPDATE', 'DELETE'],
     MVP_MILESTONE_PROGRESS: ['READ', 'UPDATE'],
     BURN_RATE_RUNWAY: ['READ', 'UPDATE'],
     FINANCIAL_PROJECTIONS: ['READ', 'UPDATE'],
@@ -199,6 +200,21 @@ const PERMISSION_MATRIX: Record<Role, Record<Module, Permission[]>> = {
     PILOT_CLIENT_PERFORMANCE_VIEW: ['READ'],
     COMPLIANCE_RISK_LOGS: ['READ'],
   },
+  FOUNDING_TEAM: {
+    USER_MANAGEMENT: [],
+    CAPITAL_USAGE_BUDGET: ['CREATE', 'READ', 'UPDATE', 'DELETE'],
+    MVP_MILESTONE_PROGRESS: ['READ'],
+    BURN_RATE_RUNWAY: ['READ'],
+    FINANCIAL_PROJECTIONS: ['READ'],
+    HIRING_HEADCOUNT_PLAN: ['READ'],
+    INVESTOR_REPORT_GENERATOR: ['READ'],
+    KPI_DASHBOARD: ['READ'],
+    ROADMAP_TIMELINE_VIEW: ['READ'],
+    DEV_PROGRESS_INFRA_STATUS: ['READ'],
+    DELIVERY_NETWORK_METRICS: ['READ'],
+    PILOT_CLIENT_PERFORMANCE_VIEW: ['READ'],
+    COMPLIANCE_RISK_LOGS: ['READ'],
+  },
   TEAM: {
     USER_MANAGEMENT: [],
     CAPITAL_USAGE_BUDGET: ['READ'],
@@ -264,4 +280,9 @@ export function isAdmin(role: Role): boolean {
 
 export function isManager(role: Role): boolean {
   return MANAGER_ROLES.includes(role);
+}
+
+// Budget-specific permission check
+export function canAccessBudget(userRole: Role, permission: Permission): boolean {
+  return hasPermission(userRole, 'CAPITAL_USAGE_BUDGET', permission);
 } 
